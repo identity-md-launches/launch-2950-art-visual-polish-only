@@ -1,0 +1,61 @@
+{
+  "method": "WCAG relative sRGB luminance. Declared solid pairs and explicit alpha-composited brightest card-gradient stops; artwork and unknown image backgrounds are not inferred.",
+  "pairs": [
+    {
+      "name": "Panel descriptions",
+      "foreground": "#abb8c8",
+      "background": "#151e2c",
+      "ratio": 8.31
+    },
+    {
+      "name": "Normal card hint, brightest gradient stop",
+      "foreground": "#abb8c8",
+      "background": [
+        39.33,
+        45.3,
+        47.86
+      ],
+      "ratio": 6.9
+    },
+    {
+      "name": "Selected card hint, brightest gradient stop",
+      "foreground": "#abb8c8",
+      "background": [
+        64.1,
+        63.05,
+        53.01
+      ],
+      "ratio": 5.26
+    },
+    {
+      "name": "Primary button",
+      "foreground": "#241b0c",
+      "background": "#ffc861",
+      "ratio": 11.06
+    },
+    {
+      "name": "Selected day tab",
+      "foreground": "#0e1420",
+      "background": "#f3eddf",
+      "ratio": 15.79
+    },
+    {
+      "name": "Ordinary control border on panel",
+      "foreground": "#63788a",
+      "background": "#151e2c",
+      "ratio": 3.66
+    },
+    {
+      "name": "Tactic border at brightest normal stop",
+      "foreground": "#81785e",
+      "background": [
+        39.33,
+        45.3,
+        47.86
+      ],
+      "ratio": 3.17
+    }
+  ],
+  "probeMeasuredMinimumTextRatio": 7.32,
+  "probeUnmeasuredBackgrounds": "all measured text meets 4.5:1 (3:1 large)\n187 text boxes over images, video, canvas or gradients not measured"
+}

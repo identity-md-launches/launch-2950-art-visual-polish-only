@@ -27,6 +27,7 @@ declare function series(day: any): number[];
 declare function smooth(values: number[], radius: number): number[];
 declare function lmKind(name: string): string;
 declare function dayFacts(day: any): any;
+declare function renderChapters(): void;
 `);
 const args = ['--allowJs', '--checkJs', '--noEmit', '--target', 'ES2022', '--lib', 'ES2022,DOM,DOM.Iterable', '--skipLibCheck', join(scratch, 'environment.d.ts'), join(scratch, 'art.js')];
 const result = process.argv[2]

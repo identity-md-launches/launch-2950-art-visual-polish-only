@@ -4,7 +4,7 @@
 
 Wheelbound is a daily tactic game and a journal of Squeektoshi's real running. The visual idea is a cosy moonlit storybook trail: cool, deep scenery with small pools of lantern light. The serif wordmark and chapter titles carry the story; the sans-serif controls and clearly aligned numbers carry the game.
 
-The implementation remains one document, [index.html](index.html), with inline CSS and JavaScript. The existing wallet bar sits immediately after the header so its primary action is visible on a 390 px first screen. Game copy, element IDs, card rules, data, wallets, scoring and polling are preserved apart from the two specifically requested pick corrections.
+The implementation remains one document, [index.html](index.html), with inline CSS and JavaScript. The wallet bar sits immediately after the header. At widths up to 760 px, the raid comes next, with its day choice and tactic hand before the full explanation and progress bars, making guest play visible on the first phone screen. Game copy, element IDs, card rules, data, wallets, scoring and polling are preserved apart from the two specifically requested pick corrections.
 
 ## Colors
 
@@ -42,16 +42,16 @@ Body line height is 1.6; most headings use 1.2 and the wordmark 1.05 with `-.035
 
 ## Layout
 
-`.wrap` centers a maximum 1120 px column. Desktop body padding is 40 px above and 48 px below; inline padding respects safe areas with a 16 px minimum. Primary groups have 28 px gaps, reduced to 24 px on phones. Within components, spacing primarily uses 8, 12, 16, 20, 24 and 28 px.
+`.wrap` centers a maximum 1120 px column. Desktop body padding is 40 px above and 48 px below; inline padding respects safe areas with a 16 px minimum. Primary groups have 28 px gaps, reduced to 16 px on phones. Phone body padding is 16 px above and 32 px below; the wallet uses 12 px vertical padding and an 8 px row gap. Within components, spacing primarily uses 8, 12, 16, 20, 24 and 28 px.
 
 | Breakpoint | Implemented adaptation |
 | --- | --- |
 | Up to 880 px | Raid heading, boss/trail panels and stream preview use one column; feed indicators wrap |
-| Up to 760 px | Statistics use two columns; tactic cards become full-width rows; week strip becomes four cells then three; chapter facts move above prose; brand becomes 44 px |
+| Up to 760 px | Raid moves before scene/statistics; its heading, day tabs and tactic hand precede the explanation and progress bars; statistics use two columns; tactic cards become full-width rows; week strip becomes four cells then three; chapter facts move above prose; brand becomes 44 px |
 | Up to 640 px | Scene caption moves below the painting on a solid surface; canvas uses a 16:8 display frame; round rows use two columns with transaction links on another row; panel padding becomes 20 px |
 | Up to 360 px | Card icon becomes 40 px; card padding tightens; statistics reuse the 24 px size |
 
-Text containers use flexible minimums and wrapping rather than fixed heights. The trail is an intentional local horizontal scroll strip with a visible scrollbar and a native keyboard focus target. The page itself has no horizontal overflow at the tested 320, 390, 768 and 1440 px widths.
+Text containers use flexible minimums and wrapping rather than fixed heights. The trail is an intentional local horizontal scroll strip with a visible scrollbar and a native keyboard focus target. The page itself has no horizontal overflow at the tested 320, 360, 390, 640, 760, 761, 768, 880 and 1440 px widths. At 390 × 844, the first complete tactic ends at y=717; at 320 × 844 it ends at y=761. CSS `order` and presentation-only `display:contents` on the raid's existing grouping divs implement the narrow-screen arrangement; desktop layout is preserved.
 
 ## Elevation & Depth
 
@@ -82,14 +82,14 @@ Hover treatments are gated by `@media(hover:hover)`. Under normal motion prefere
 
 `og.png` is a 1200×630 illustrated preview with the requested title, sentence and three tactic cards. `card.png` is a 1600×900, two-color black-and-white adaptation with bold `WHEELBOUND` lettering for the LED board. The OG and Twitter image metadata both use `https://wheelbound.imd.site/og.png`.
 
-`art/night-trail.webp` is a 1600×700 decorative painted backdrop. `drawNightSky` uses it only when `complete && naturalWidth > 0`; the procedural sky and character remain available while it loads. `drawScene` adds the cratered moon, layered hills, lit landmark, lanterns, botanical details, textured earth and Squeektoshi. `drawHamster` uses radial shading, a cream belly, pink ears and feet, eye highlights and seeded fur strokes. `finishPainting` reuses a cached 96×96 seeded paper-grain tile.
+`art/night-trail.webp` is a 1600×700 decorative painted backdrop. `drawNightSky` uses it only when `complete && naturalWidth > 0`; the procedural sky and character remain available while it loads. On image load, the art listener invalidates both chapter cache attributes and calls `renderChapters`, so completed paintings also acquire late scenery. Chapter data and text stay unchanged, and subsequent renders remain deterministic. `drawScene` adds the cratered moon, layered hills, lit landmark, lanterns, botanical details, textured earth and Squeektoshi. `drawHamster` uses radial shading, a cream belly, pink ears and feet, eye highlights and seeded fur strokes. `finishPainting` reuses a cached 96×96 seeded paper-grain tile.
 
 `paintDay` retains the original half-hour series, running-shaped hills, reached landmarks and accumulated-distance path. Its saved-card moon leaves room for the title. All random details use the existing `rng(seed)` helper; no `Math.random()` is used.
 
 ## Do's and Don'ts
 
 - Reuse the existing tokens and six type roles; keep story headings serif and controls sans-serif.
-- Keep the connect action visible before the scene on narrow screens. Preserve the full explanatory copy.
+- Keep the day choice and a complete guest tactic on the first phone screen, with the raid before the scene and full explanatory copy after its hand. Keep the wallet action available.
 - Use a boundary or static marker for interactive state; keep rest/future text at full opacity.
 - Keep controls and numeric values in flexible layouts. Confine horizontal scrolling to the trail.
 - Keep decorative art optional until decoded, seeded, and independent of the game state calculations.

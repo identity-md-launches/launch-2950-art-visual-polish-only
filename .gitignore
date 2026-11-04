@@ -1,0 +1,20 @@
+# Explicit revision-output budget: this file <=4096 bytes; responses <=8192;
+# listed report/document/license files together <=131072; five screenshots
+# together <=2097152. Total newly allowed paths <=2240512 bytes.
+# Dependency, browser and cache directories remain outside the submission.
+!/.imd-responses.json
+!/artifacts/
+/artifacts/**
+!/artifacts/validation.md
+!/artifacts/revision-checks.json
+!/artifacts/browser-checks.json
+!/artifacts/taste-checks.json
+!/artifacts/color-contrast.json
+!/artifacts/design-guidance-LICENSE.txt
+!/artifacts/screenshots/
+/artifacts/screenshots/*
+!/artifacts/screenshots/phone-before.png
+!/artifacts/screenshots/phone-after.png
+!/artifacts/screenshots/phone-320.png
+!/artifacts/screenshots/chapter-before.png
+!/artifacts/screenshots/chapter-after.png

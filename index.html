@@ -211,7 +211,13 @@ body.overlay .ov-prev{padding:0;background:none}
 @media(max-width:880px){.raid-head,.grid2,.ov-panel{grid-template-columns:minmax(0,1fr)}.raid-head{gap:24px}.chips{flex-direction:row;flex-wrap:wrap;padding:0}.brand{flex-basis:100%}header.top{gap:16px}.panel{padding:24px}.stats>div{padding-inline:16px}}
 @media(max-width:760px){
   :root{--text-brand:44px}
-  body{padding-block:24px 32px}.wrap{gap:24px}
+  body{padding-block:16px 32px}.wrap{gap:16px}
+  header.top{gap:12px}.brand p{margin-top:8px}.wallet{padding-block:12px;gap:8px 20px}
+  /* Put the guest game before the scenery, and its hand before the full explanation. */
+  .wrap>.top{order:-3}.wrap>.wallet{order:-2}.wrap>.raid{order:-1}
+  .raid{display:flex;flex-direction:column}.raid-head,.raid-intro{display:contents}
+  .raid-intro h2{order:1;margin:6px 0 0}.hand-head{order:2;margin:16px 0}.hand{order:3}
+  .raid-intro .sub{order:4;margin:24px 0}.raid-bars{order:5}.week{order:6}.strikes{order:7}.raid-foot{order:8}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}.stats>div{padding:0 16px}.stats>div:nth-child(3){border-inline-start:0;padding-inline-start:0}
   .hand{grid-template-columns:minmax(0,1fr)}
   .card{min-height:0;display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px 16px;padding:20px}.card svg{grid-column:1;grid-row:1/4;align-self:center;margin:0}.card b,.card .rule,.card .hint{grid-column:2}.card .hint{padding-top:0;margin-top:0}.card[aria-checked=true]{padding:19px}.card[aria-checked=true] b{padding-inline-end:20px}
@@ -737,6 +743,13 @@ const lmKind = name => name.split(' ').find(w => LM_B.includes(w)) || 'Ridge';
 // Decorative art is optional until decoded; all data-driven drawing works without it.
 const trailArt = new Image();
 trailArt.decoding = 'async';
+trailArt.addEventListener('load', () => {
+  for (const el of document.querySelectorAll('.chapter')) {
+    el.removeAttribute('data-sig');
+    el.removeAttribute('data-painted');
+  }
+  renderChapters();
+});
 trailArt.src = 'art/night-trail.webp';
 let grainTile = null;
 

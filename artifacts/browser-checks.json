@@ -1,0 +1,101 @@
+{
+  "results": [
+    {
+      "name": "Subpath export loads real game and tactic cards",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Root /, nested export, and both PNG routes return HTTP 200",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "390 px first screen has active day, a complete guest tactic, connect action, and visible keyboard focus",
+      "passed": true,
+      "detail": "First card: y=592.515625, bottom=716.890625"
+    },
+    {
+      "name": "Connect without an extension offers wallet app links; Back restores the action",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Keyboard tactic selection sets aria-checked and persists across reload",
+      "passed": true,
+      "detail": "Marathon"
+    },
+    {
+      "name": "Share this week copies the raid result",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Copy text copies a real generated chapter",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Save card downloads a valid 1200 × 630 PNG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Older chapters expand the existing chronicle",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "How Wheelbound works expands and collapses from the keyboard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Trail scroll strip responds to the keyboard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Reduced-motion canvas stays deterministic; no endless CSS animation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "No horizontal overflow or stream-preview overlap at 320, 390, 768 and 1440 px",
+      "passed": true,
+      "detail": "[{\"width\":320,\"client\":320,\"scroll\":320},{\"width\":390,\"client\":390,\"scroll\":390},{\"width\":768,\"client\":768,\"scroll\":768},{\"width\":1440,\"client\":1440,\"scroll\":1440}]"
+    },
+    {
+      "name": "Overlay link copies; #overlay retains transparent page and isolated overlay",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Optional backdrop safely skips drawing until loaded, then appears",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Completed chapter acquires delayed backdrop without changing its data, text or deterministic redraw",
+      "passed": true,
+      "detail": "2026-11-02"
+    },
+    {
+      "name": "Desktop selected-tab hover remains readable; card hover responds",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Changing to reduced motion pauses the live canvas and hover movement",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "No console errors, JavaScript exceptions, or failed local resources",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "errors": [],
+  "localFailures": []
+}

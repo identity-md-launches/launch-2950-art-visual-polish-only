@@ -45,4 +45,53 @@ All data is read in the browser from the public Squeekchain API at `https://api.
 
 ## Run locally
 
-Static site, no build step: `index.html`, `favicon.svg` and `og.png` (the link preview). Serve the folder with any static server (for example `npx serve .`) and open the page.
+There is nothing to install for the site. It remains plain HTML, CSS and JavaScript, with no framework, external script, package manifest, lockfile or required build step. Fonts and artwork are local. Live game data still needs access to the original public Squeekchain API and Sepolia RPCs.
+
+The finished static export is included in `dist/`. Preview it with:
+
+```sh
+python3 -m http.server 8080 --directory dist
+```
+
+Open `http://localhost:8080/`. You can also serve the repository root directly. Both serve `index.html` as the game; `/og.png` and `/card.png` are PNG images. Relative runtime asset paths also support hosting under a subpath. Hosting and publishing are separate from this delivery.
+
+## Rebuild the static export
+
+After editing root `index.html` or the local assets, run:
+
+```sh
+node scripts/export.mjs
+node scripts/check.mjs
+node scripts/check-picks.mjs
+```
+
+The export command only copies `index.html`, `favicon.svg`, `og.png`, `card.png` and `art/` into `dist/`; it performs no compilation or dependency installation. Keep both source and export in the submission. No existing build configuration or dependency file was changed.
+
+## Artwork and visual system
+
+- `og.png`: 1200×630 full-color moonlit storybook scene, with the requested title, sentence and Night Owl / Sprint / Marathon cards.
+- `card.png`: 1600×900, two-color black-and-white board image with bold `WHEELBOUND` lettering.
+- `art/night-trail.webp`: local painted scenery used beneath deterministic canvas details. Unloaded images are skipped safely.
+- `art/fonts/`: the existing Gloock, Instrument Sans and JetBrains Mono families bundled as WOFF2, with their SIL Open Font Licenses.
+- [DESIGN.md](DESIGN.md): implemented tokens, typography, components, responsive layouts and motion behavior.
+
+The visual work preserves page text, IDs, card rules, scoring, wallet code, data sources, storage keys and timers. The wallet bar is presented above the scene to keep the connect action on the first phone screen. The two requested pick fixes are applied verbatim: late picks use the first settled round with running and its inclusive end boundary; current-day picks also require a status younger than 30 seconds and a non-stale measurement.
+
+## Validation
+
+The final export passed static checks, a scoped canvas-art typecheck, 18 pick regression checks, and 18 Chromium browser checks. Browser checks covered guest selection and persistence, wallet app links, sharing, chapter copy/download, older chapters, keyboard controls, delayed artwork, responsive reflow, live motion-preference changes and transparent overlay mode. `/` and both image routes returned HTTP 200; the populated browser run had no console errors or failed local resources.
+
+The pinned design probe passed 14/16 checks. The two retained flags are preserved copy: 70 first-screen prose words and the next-landmark distance repeated in the stream preview. The brief explicitly requires the existing page text and overlay to remain. [Validation details and limitations](artifacts/validation.md), [probe results](artifacts/taste-checks.json), [interaction results](artifacts/browser-checks.json) and [color measurements](artifacts/color-contrast.json) are included.
+
+Browser transport in this run required a test-only forwarding harness for the unchanged public API/RPC reads; direct Chromium requests returned `ERR_EMPTY_RESPONSE`. The supplied browser connector lacked Chrome, and WebKit's system libraries were unavailable. Chromium used the installed headless runtime. Wallet signing, physical devices, screen-reader sessions and native browser zoom were not tested. The complete original untyped game still has the same 25 full `--checkJs` diagnostics as the input; the changed artwork passes its own typecheck without modifying that protected code.
+
+Optional validation tooling can be installed entirely in disposable scratch space:
+
+```sh
+npm install --prefix test/scratch/tools --cache test/scratch/npm-cache --no-audit --no-fund typescript@5.9.3 playwright@1.56.1
+PLAYWRIGHT_BROWSERS_PATH=test/scratch/browsers node test/scratch/tools/node_modules/playwright/cli.js install chromium
+node scripts/typecheck.mjs test/scratch/tools/node_modules/typescript/bin/tsc
+PLAYWRIGHT_BROWSERS_PATH=test/scratch/browsers node scripts/validate.mjs test/scratch/tools/node_modules/playwright/index.mjs
+```
+
+The browser validation uses the public services and an empty browser profile; it selects a guest card for the available open hand and sends no transaction. Tooling, caches, browser downloads and generated test files are excluded from delivery by keeping them under `test/scratch/`. No ignore file was changed. The pinned taste probe was run from the assignment inputs; it is not a runtime dependency. See the byte budget in [artifacts/validation.md](artifacts/validation.md).

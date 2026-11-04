@@ -1,0 +1,1635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wheelbound</title>
+<meta name="description" content="The endless journey of Squeektoshi, written by the wheel. Every settled Squeekchain round moves the story forward.">
+<meta property="og:title" content="Wheelbound">
+<meta property="og:description" content="The endless journey of Squeektoshi, written by the wheel. A new chapter every day, a new boss every week.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://wheelbound.imd.site/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Wheelbound: Squeektoshi the hamster on a moonlit trail, with three tactic cards">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wheelbound.imd.site/og.png">
+<meta name="theme-color" content="#0e1420">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:Gloock;src:url('art/fonts/gloock-latin.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'Instrument Sans';src:url('art/fonts/instrument-sans-latin.woff2') format('woff2');font-style:normal;font-weight:400 600;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('art/fonts/jetbrains-mono-latin.woff2') format('woff2');font-style:normal;font-weight:400 600;font-display:swap}
+/* Moonlight for the world; lantern light for the things you can do. */
+:root{
+  --ink:#0e1420;--panel:#151e2c;--panel-2:#1b2837;--line:#304151;
+  --fg:#f3eddf;--muted:#abb8c8;--lantern:#ffc861;--ember:#ff7a59;--moss:#7bd389;
+  --f-display:Gloock,'Iowan Old Style','Palatino Linotype',Georgia,serif;
+  --f-body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --text-note:12px;--text-small:14px;--text-body:16px;--text-heading:24px;--text-feature:32px;--text-brand:64px;
+  --r:20px;--ease:cubic-bezier(.2,0,0,1);color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--ink);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html,body{margin:0;color:var(--fg)}
+body{background:radial-gradient(ellipse at 85% 0,rgba(67,97,99,.15),transparent 650px),var(--ink);font-family:var(--f-body);font-size:var(--text-body);line-height:1.6;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:40px 48px}
+[hidden]{display:none!important}
+.wrap{max-width:1120px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
+.wrap>*{min-width:0}
+button{font:inherit;color:inherit;touch-action:manipulation}
+b,strong{font-weight:600}
+:focus-visible{outline:2px solid var(--lantern);outline-offset:4px}
+::selection{background:var(--lantern);color:var(--ink)}
+a{color:var(--lantern);text-underline-offset:4px;text-decoration-thickness:1px;overflow-wrap:anywhere}
+.num{font-variant-numeric:tabular-nums}
+.label{font-family:var(--f-body);font-size:var(--text-note);letter-spacing:0;text-transform:none;color:var(--muted);line-height:1.5}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:20px 32px}
+.brand{flex:1 1 560px;min-width:0}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:var(--text-brand);line-height:1.05;letter-spacing:-.035em}
+.brand h1 em{font-style:normal;color:var(--lantern)}
+.brand p{margin:12px 0 0;max-width:69ch;color:var(--muted);font-size:var(--text-small);text-wrap:pretty}
+.chips{display:flex;flex-direction:column;gap:8px;padding-block:7px;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:var(--text-note);color:var(--muted);line-height:1.5;overflow-wrap:anywhere}
+.dot{flex:0 0 6px;width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--moss);box-shadow:0 0 10px rgba(123,211,137,.45)}
+.dot.warn{background:var(--lantern)}
+.dot.bad{background:var(--ember)}
+.wallet{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin:0;padding:16px 0;border-block:1px solid var(--line);min-width:0}
+.wallet .wbtns{display:flex;flex-wrap:wrap;gap:10px}
+.wallet .wstate{font-size:var(--text-small);color:var(--muted);min-width:0;flex:1 1 400px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;overflow-wrap:anywhere}
+.wallet .addr{font-family:var(--f-mono);font-size:var(--text-small);color:var(--fg)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;background:var(--panel-2);font-size:var(--text-note);line-height:1.5;overflow-wrap:anywhere}
+.badge.ok{color:var(--moss);background:#19332b}
+.badge.warn{color:var(--lantern);background:#322a1e}
+.badge.bad{color:var(--ember);background:#382426}
+.hero{position:relative;border-radius:var(--r);overflow:hidden;background:var(--panel);outline:1px solid rgba(255,255,255,.1);outline-offset:-1px;isolation:isolate}
+#scene{display:block;width:100%;height:auto;aspect-ratio:16/7;max-width:100%}
+.hero-cap{position:absolute;inset:auto 0 0;padding:24px 28px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;background:linear-gradient(0deg,rgba(8,15,23,.97),rgba(8,15,23,.65) 55%,transparent)}
+.hero-cap .where{min-width:0;flex:1 1 280px}
+.hero-cap .where b{display:block;margin-block:3px;font-family:var(--f-display);font-weight:400;font-size:var(--text-feature);line-height:1.15;text-wrap:balance}
+.hero-cap .where span{color:#d3dbdb;font-size:var(--text-small)}
+.hero-cap .where .label{color:var(--lantern);font-size:var(--text-note)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-block:4px 8px}
+.stats>div{padding:8px 24px;border-inline-start:1px solid var(--line);min-width:0}
+.stats>div:first-child{padding-inline-start:0;border:0}
+.stats .v{margin-block:5px;font-family:var(--f-display);font-size:var(--text-feature);line-height:1.15;font-variant-numeric:tabular-nums}
+.stats .s{font-size:var(--text-note);color:var(--muted)}
+.panel{background:var(--panel);border-radius:var(--r);padding:28px;min-width:0}
+.panel h2{margin:0 0 8px;font-family:var(--f-display);font-weight:400;font-size:var(--text-heading);line-height:1.2;text-wrap:balance}
+.panel .sub{color:var(--muted);font-size:var(--text-small);margin:0 0 16px;text-wrap:pretty}
+.raid{background:linear-gradient(135deg,#192535,var(--panel) 55%);position:relative}
+.raid-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:center}
+.raid-intro h2{margin:6px 0 12px}
+.raid-intro .sub{max-width:68ch;margin-bottom:0}
+.raid-bars{display:flex;flex-direction:column;gap:20px}
+.rb-l{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;font-size:var(--text-small);color:var(--muted);margin-bottom:8px}
+.hp{height:10px;border-radius:6px;background:#0c1520;overflow:hidden}
+.hp>i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d96348,var(--ember));transition:width .6s var(--ease)}
+.hp>i.mine{background:linear-gradient(90deg,#d49b41,var(--lantern))}
+.hand-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin:28px 0 16px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tab{cursor:pointer;border:1px solid #63788a;background:transparent;border-radius:8px;min-height:44px;padding:9px 16px;font-size:var(--text-small);font-weight:600}
+.tab[aria-pressed=true]{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.hand{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{position:relative;isolation:isolate;cursor:pointer;text-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:22px;min-height:230px;border-radius:14px;border:1px solid #81785e;background:radial-gradient(ellipse at 10% 0,rgba(255,200,97,.09),transparent 65%),#121e2b;min-width:0}
+.card::before{content:'';position:absolute;inset:7px;border:1px solid rgba(255,200,97,.09);border-radius:8px;pointer-events:none;z-index:-1}
+.card svg{width:56px;height:56px;fill:none;stroke:var(--lantern);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:12px;padding:6px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,97,.12),transparent 70%)}
+.card b{font-family:var(--f-display);font-weight:400;font-size:var(--text-heading);line-height:1.2}
+.card .rule{font-size:var(--text-small);color:var(--fg);line-height:1.6}
+.card .hint{font-size:var(--text-note);color:var(--muted);margin-top:auto;padding-top:8px}
+.card[aria-checked=true]{border:2px solid var(--lantern);padding:21px;background:radial-gradient(ellipse at 10% 0,rgba(255,200,97,.17),transparent 70%),#19232c}
+.card[aria-checked=true]::after{content:'';position:absolute;inset-block-start:21px;inset-inline-end:22px;width:8px;height:14px;border:solid var(--lantern);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;margin-top:28px;background:#111b27;border-radius:12px;overflow:hidden}
+.wday{display:flex;flex-direction:column;gap:5px;align-items:flex-start;padding:14px 12px;min-width:0;border-inline-start:1px solid var(--line)}
+.wday:first-child{border-inline-start:0}
+.wday.now{background:#27291f;position:relative}
+.wday.now::before{content:'';position:absolute;inset:0 0 auto;height:2px;background:var(--lantern)}
+.wday.future{color:var(--muted)}
+.wday .k{font-size:var(--text-note);color:var(--muted)}
+.wday .ic svg{width:26px;height:26px;fill:none;stroke:var(--lantern);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wday .ic .none{display:inline-block;height:26px;color:var(--muted)}
+.wday .nm{font-size:var(--text-note);font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+.wday .st{color:var(--lantern);font-size:var(--text-small)}
+.wday .dm{font-family:var(--f-mono);font-size:var(--text-note)}
+.wday .best{font-size:var(--text-note);color:var(--muted);line-height:1.5}
+.btn{cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:44px;border:1px solid #63788a;background:transparent;border-radius:9px;padding:9px 16px;font-size:var(--text-small);font-weight:600;line-height:1.5}
+.btn.primary{background:var(--lantern);color:#241b0c;border-color:var(--lantern)}
+.btn.wpick{display:inline-flex;align-items:center;gap:8px}
+.btn.wpick img{border-radius:4px}
+a.btn{text-decoration:none;color:var(--fg)}
+.btn:disabled{cursor:wait;color:var(--muted);background:var(--panel-2);border-color:var(--line)}
+.strikes{margin-top:28px}
+.strikes-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;margin-bottom:12px}
+.strike-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.strike-list li{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.7fr) minmax(0,1.1fr) auto;gap:6px 16px;align-items:center;padding:14px 8px;border-bottom:1px solid var(--line);font-size:var(--text-small)}
+.strike-list li:first-child{border-top:1px solid var(--line)}
+.strike-list li.rest{color:var(--muted)}
+.strike-list .r{font-family:var(--f-mono);font-size:var(--text-note);overflow-wrap:anywhere}
+.strike-list .hit{color:var(--lantern);font-weight:600}
+.strike-list .tx{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.strike-list .tx a{display:inline-flex;align-items:center;min-height:26px;font-family:var(--f-mono);font-size:var(--text-note)}
+.sub.small{font-size:var(--text-note);margin:12px 0 0}
+.raid-foot{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-start;margin-top:20px}
+.raid-foot .boss-log{margin:0;flex:1 1 300px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:24px}
+.boss-name{font-family:var(--f-display);font-size:var(--text-heading);line-height:1.2;margin:8px 0}
+.boss-epi{color:var(--muted);font-size:var(--text-small);margin:0 0 24px}
+.hp-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;margin-top:10px;font-family:var(--f-mono);font-size:var(--text-note);color:var(--muted)}
+.boss-log{margin:20px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:var(--text-small)}
+.boss-log li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;border-top:1px solid var(--line);padding-top:10px}
+.boss-log .won{color:var(--moss)}.boss-log .lost{color:var(--muted)}
+.trail{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 16px;scroll-snap-type:x proximity;scrollbar-color:#627164 transparent;scrollbar-width:thin}
+.lm{flex:0 0 168px;scroll-snap-align:start;border-inline-start:2px solid var(--line);padding:10px 14px;background:#111c29;border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.lm .k{font-family:var(--f-mono);font-size:var(--text-note);color:var(--muted)}
+.lm .n{font-weight:600;line-height:1.5;font-size:var(--text-small)}
+.lm .d{font-size:var(--text-note);color:var(--muted)}
+.lm.passed{border-color:var(--moss)}
+.lm.passed .n::before{content:'\25C6  ';color:var(--moss)}
+.lm.next{border-inline-start:2px solid var(--lantern);background:#25291f}
+.lm.biome{background:transparent;border:0;padding-inline:4px}
+.lm.biome .k{font-family:var(--f-body)}
+.lm.biome .n{font-family:var(--f-display);font-weight:400;font-size:var(--text-heading);line-height:1.2}
+.chron-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-block:10px 20px}
+.chron-head h2{margin:0;font-family:var(--f-display);font-weight:400;font-size:var(--text-feature);line-height:1.2}
+.chapters{display:flex;flex-direction:column;gap:28px}
+.chapter{display:grid;grid-template-columns:minmax(0,1fr) 200px;grid-template-areas:'art art' 'text facts';background:var(--panel);border-radius:var(--r);overflow:hidden}
+.chapter canvas{grid-area:art;display:block;width:100%;height:auto;aspect-ratio:12/4;max-width:100%;background:var(--panel-2)}
+.chapter .facts{grid-area:facts;display:flex;flex-direction:column;border-inline-start:1px solid var(--line);margin-block:28px}
+.chapter .facts div{padding:12px 24px;min-width:0}
+.chapter .facts b{display:block;font-family:var(--f-display);font-weight:400;font-size:var(--text-heading);line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.chapter .facts span{font-size:var(--text-note);color:var(--muted)}
+.chapter .text{grid-area:text;padding:28px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.chapter .paras{display:flex;flex-direction:column;gap:14px}
+.chapter .eyebrow{font-family:var(--f-body);font-size:var(--text-note);letter-spacing:0;text-transform:none;color:var(--muted)}
+.chapter h3{margin:0;font-family:var(--f-display);font-weight:400;font-size:var(--text-heading);line-height:1.2;text-wrap:balance}
+.chapter p{margin:0;max-width:65ch;color:#d9dfdd}
+.chapter .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:auto;padding-top:6px}
+.chapter.today{outline:1px solid #716440;outline-offset:-1px}
+.chapters .more{align-self:center}
+.loading{color:var(--muted);padding:24px;background:var(--panel);border-radius:var(--r);font-size:var(--text-small)}
+details.how{color:var(--muted);font-size:var(--text-small);padding-block:12px;border-block:1px solid var(--line)}
+details.how summary{cursor:pointer;color:var(--fg);font-weight:600;min-height:44px;align-content:center}
+details.how p{max-width:72ch;margin-block:16px}
+footer{font-size:var(--text-note);color:var(--muted);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+footer a{min-height:24px;align-content:center}
+.toast{position:fixed;inset-inline-start:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--ink);padding:12px 20px;border-radius:12px;font-weight:600;font-size:var(--text-small);z-index:20;max-width:calc(100% - 32px);width:max-content}
+.ov-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:28px;align-items:center;background:transparent;border-top:1px solid var(--line);border-radius:0}
+.panel.ov-panel{padding:28px 0}
+.ov-prev{min-width:0;padding:16px;border-radius:0;background:repeating-conic-gradient(#1b2837 0% 25%,#151e2c 0% 50%) 0 0/24px 24px}
+.steps{margin:0 0 20px;padding-inline-start:20px;color:#d9dfdd;font-size:var(--text-small)}
+.steps li+li{margin-top:6px}
+.ov-url{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.ov-url code{font-family:var(--f-mono);font-size:var(--text-note);padding:9px 12px;border-radius:8px;background:#0e1824;overflow-wrap:anywhere;min-width:0;max-width:100%}
+#ov{display:flex;width:min(460px,100%);flex-direction:column;gap:8px;padding:16px;border-radius:14px;background:rgba(14,20,32,.86);border:1px solid rgba(255,200,97,.35);backdrop-filter:blur(6px)}
+#ov .row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 10px}
+#ov .t{font-family:var(--f-display);font-size:var(--text-heading)}
+#ov .bar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+#ov .bar i{display:block;height:100%;background:var(--lantern)}
+#ov .bar.boss i{background:var(--ember)}
+#ov small{color:var(--muted);font-size:var(--text-note);overflow-wrap:anywhere}
+/* Transparent OBS mode stays independent of page decoration. */
+html.overlay,html.overlay body{background:transparent}
+body.overlay{padding:12px}
+body.overlay .wrap>*:not(.ov-panel){display:none!important}
+body.overlay .ov-panel{display:block;background:transparent;border:0;padding:0}
+body.overlay .ov-text{display:none}
+body.overlay .ov-prev{padding:0;background:none}
+@media(hover:hover){
+  .btn:not(:disabled):hover,.tab:hover{border-color:var(--lantern);background:#27303a}
+  .btn.primary:not(:disabled):hover{background:#ffda8c;color:#241b0c}
+  .tab[aria-pressed=true]:hover{background:#fff4dd;color:var(--ink);border-color:#fff4dd}
+  .card:hover{transform:translateY(-3px);border-color:var(--lantern)}
+  a:not(.btn):hover{text-decoration-color:var(--fg);color:var(--fg)}
+  .strike-list li:hover{background:rgba(255,255,255,.025)}
+}
+@media(prefers-reduced-motion:no-preference){
+  .btn,.tab{transition:background-color .15s var(--ease),border-color .15s var(--ease),color .15s var(--ease),transform .15s var(--ease)}
+  .card{transition:transform .15s var(--ease),border-color .15s var(--ease),background-color .15s var(--ease)}
+  .btn:not(:disabled):active,.tab:active{transform:scale(.96)}
+}
+@media(max-width:880px){.raid-head,.grid2,.ov-panel{grid-template-columns:minmax(0,1fr)}.raid-head{gap:24px}.chips{flex-direction:row;flex-wrap:wrap;padding:0}.brand{flex-basis:100%}header.top{gap:16px}.panel{padding:24px}.stats>div{padding-inline:16px}}
+@media(max-width:760px){
+  :root{--text-brand:44px}
+  body{padding-block:24px 32px}.wrap{gap:24px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}.stats>div{padding:0 16px}.stats>div:nth-child(3){border-inline-start:0;padding-inline-start:0}
+  .hand{grid-template-columns:minmax(0,1fr)}
+  .card{min-height:0;display:grid;grid-template-columns:56px minmax(0,1fr);gap:6px 16px;padding:20px}.card svg{grid-column:1;grid-row:1/4;align-self:center;margin:0}.card b,.card .rule,.card .hint{grid-column:2}.card .hint{padding-top:0;margin-top:0}.card[aria-checked=true]{padding:19px}.card[aria-checked=true] b{padding-inline-end:20px}
+  .week{grid-template-columns:repeat(4,minmax(0,1fr));gap:0}.wday{padding:12px 10px}.wday:nth-child(5){border-inline-start:0}.wday:nth-child(n+5){border-top:1px solid var(--line)}
+  .chapter{grid-template-columns:minmax(0,1fr);grid-template-areas:'art' 'facts' 'text'}.chapter .facts{flex-direction:row;border-inline-start:0;border-bottom:1px solid var(--line);margin:0}.chapter .facts div{flex:1;padding:16px 12px;border-inline-start:1px solid var(--line)}.chapter .facts div:first-child{border:0}.chapter .facts b{font-size:var(--text-body)}
+  .chapter .text{padding:24px}.chron-head{align-items:flex-start;flex-direction:column;gap:8px}.wallet .wstate{flex-basis:100%}
+}
+@media(max-width:640px){
+  .hero-cap{position:static;padding:16px 20px;background:#111c28}.hero-cap .where b{font-size:var(--text-heading)}
+  #scene{aspect-ratio:16/8;object-fit:cover}
+  .strike-list li{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}.strike-list .tx{grid-column:1/-1;justify-content:flex-start}
+  .panel{padding:20px}.chapter .text{padding:20px}.raid-bars{gap:16px}.raid-intro .sub{line-height:1.6}
+}
+@media(max-width:360px){.card{grid-template-columns:40px minmax(0,1fr);gap:6px 12px;padding:18px}.card svg{width:40px;height:40px}.card[aria-checked=true]{padding:17px}.wday{padding-inline:7px}.stats .v{font-size:var(--text-heading)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}.card:hover{transform:none}}
+@media(forced-colors:active){:focus-visible{outline-color:Highlight}.card[aria-checked=true],.tab[aria-pressed=true]{border-color:Highlight}.btn,.card{border:1px solid ButtonText}.hp{border:1px solid CanvasText}}
+
+</style>
+</head>
+<body>
+<div class="wrap" role="main">
+  <header class="top">
+    <div class="brand">
+      <h1>Wheel<em>bound</em></h1>
+      <p>The endless journey of Squeektoshi, written by the wheel. Every settled Squeekchain round moves the story forward: a new chapter every day, a new boss every week.</p>
+    </div>
+    <div class="chips">
+      <span class="chip" aria-live="polite"><span class="dot" id="feedDot"></span><span id="feedTxt">Connecting…</span></span>
+      <span class="chip"><span class="dot" id="histDot"></span><span id="histTxt">Reading the chain…</span></span>
+    </div>
+  </header>
+
+  <div class="wallet" id="wallet" aria-live="polite"><div class="wbtns" id="wBtns"></div><span class="wstate" id="wState">Checking for a wallet…</span></div>
+
+  <section class="hero" aria-label="Where Squeektoshi is now">
+    <canvas id="scene" width="1600" height="700" role="img" aria-label="Squeektoshi on the trail"></canvas>
+    <div class="hero-cap">
+      <div class="where"><span class="label" id="heroBiome">On the trail</span><b id="heroWhere">Finding the trail…</b><span id="heroNext">&nbsp;</span></div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Journey so far">
+    <div><div class="label">Journey so far</div><div class="v" id="stTotal">—</div><div class="s" id="stTotalSub">real distance on the wheel</div></div>
+    <div><div class="label">Today</div><div class="v" id="stToday">—</div><div class="s" id="stTodaySub">wheel day starts 12:00 UTC</div></div>
+    <div><div class="label">Landmarks passed</div><div class="v" id="stLm">—</div><div class="s" id="stLmSub">one every 5 km</div></div>
+    <div><div class="label">Bosses defeated</div><div class="v" id="stBoss">—</div><div class="s" id="stBossSub">one boss per week</div></div>
+  </section>
+
+  <section class="panel raid" aria-labelledby="raidH">
+    <div class="raid-head">
+      <div class="raid-intro">
+        <span class="label" id="raidBoss">The Raid Table</span>
+        <h2 id="raidH">Play the week against the boss</h2>
+        <p class="sub">Every wheel day, everyone is dealt the same three tactic cards. Pick one before the wheel first turns. Squeektoshi's real running, shaped by your card, is your damage, one settled round at a time; a day without a card deals only half. Beat the boss's health ×1.4 by the end of the week.</p>
+      </div>
+      <div class="raid-bars">
+        <div class="rb"><div class="rb-l"><span>Your raid</span><span id="raidMineTxt" class="num">—</span></div><div class="hp"><i id="raidMine" class="mine" style="width:0%"></i></div></div>
+        <div class="rb"><div class="rb-l"><span>Squeektoshi alone</span><span id="raidAloneTxt" class="num">—</span></div><div class="hp"><i id="raidAlone" style="width:0%"></i></div></div>
+      </div>
+    </div>
+    <div class="hand-head"><div class="tabs" id="handTabs" role="group" aria-label="Which day to pick for"></div><span class="label" id="handLock"></span></div>
+    <div class="hand" id="hand" role="radiogroup" aria-label="Tactic cards"></div>
+    <div class="week" id="weekStrip" aria-label="This week"></div>
+    <div class="strikes">
+      <div class="strikes-head"><span class="label">Round by round · every settled round is a hit</span><span class="label" id="roundNow"></span></div>
+      <ol class="strike-list" id="strikes" aria-label="The latest settled rounds"></ol>
+      <p class="sub small" id="strikeNote">Each round links its settlement transaction on Sepolia. ✓ means this page read that transaction back from Sepolia itself and it matches.</p>
+    </div>
+    <div class="raid-foot"><button class="btn" id="raidShare" type="button">Share this week</button><ul class="boss-log" id="raidHist"></ul></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel" aria-labelledby="bossH">
+      <span class="label" id="bossWeek">This week's boss</span>
+      <h2 id="bossH" hidden>Weekly boss</h2>
+      <div class="boss-name" id="bossName">—</div>
+      <p class="boss-epi" id="bossEpi">&nbsp;</p>
+      <div class="hp" role="progressbar" aria-label="Boss health" aria-valuemin="0" aria-valuemax="100" id="hpBar"><i id="hpFill" style="width:100%"></i></div>
+      <div class="hp-row"><span id="hpLeft">—</span><span id="hpTime">—</span></div>
+      <ul class="boss-log" id="bossLog"></ul>
+    </div>
+    <div class="panel" aria-labelledby="trailH">
+      <h2 id="trailH">The trail</h2>
+      <p class="sub">Every 5 km of real running reaches a landmark. Every 25 km the land changes.</p>
+      <div class="trail" id="trail" tabindex="0" aria-label="Landmarks along the trail"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="chronH">
+    <div class="chron-head">
+      <h2 id="chronH">The Chronicle</h2>
+      <span class="label" id="chronSub">One chapter per wheel day · times in UTC</span>
+    </div>
+    <div class="chapters" id="chapters"><div class="loading">Reading the wheel's history from the chain…</div></div>
+  </section>
+
+  <section class="panel ov-panel" aria-labelledby="ovH">
+    <div class="ov-text">
+      <h2 id="ovH">Put the journey on your stream</h2>
+      <p class="sub">A live, transparent card for OBS or any streaming tool: where Squeektoshi is, the next landmark and the boss's health. It updates on its own.</p>
+      <ol class="steps"><li>Copy the overlay link.</li><li>In OBS, add a <b>Browser</b> source and paste it. Size 480 × 230.</li><li>That's it. The background is transparent.</li></ol>
+      <div class="ov-url"><code id="ovUrl">#overlay</code><button class="btn" id="ovCopy" type="button">Copy overlay link</button></div>
+    </div>
+    <div class="ov-prev">
+      <div id="ov">
+    <div class="row"><span class="t">Wheelbound</span><small id="ovState">—</small></div>
+    <div class="row"><span id="ovWhere">—</span><small id="ovToday">—</small></div>
+    <div class="bar"><i id="ovLm" style="width:0%"></i></div>
+    <small id="ovLmTxt">—</small>
+    <div class="bar boss"><i id="ovBoss" style="width:100%"></i></div>
+    <small id="ovBossTxt">—</small>
+      </div>
+    </div>
+  </section>
+
+  <details class="how">
+    <summary>How Wheelbound works</summary>
+    <p>Squeektoshi runs on a real wheel. Squeekchain measures every turn, settles the work of each 10-minute round on chain, and publishes the measurements at api.squeekchain.com. Wheelbound reads that public data and turns it into a journey.</p>
+    <p>The distance on the trail is the real distance the wheel turned. A landmark sits every 5 km and the land changes every 25 km. Each wheel day (12:00 to 12:00 UTC, as Squeekchain counts it) becomes a chapter: its painting is drawn from the 48 half-hours of running that day, and its text from the settled rounds, the milestones and the records. Each week a boss waits on the trail; the distance run that week is the damage dealt.</p>
+    <p>Names, paintings and words are derived from the chain data with a fixed seed, so everyone who opens Wheelbound reads the same story. Add <code>#overlay</code> to the address for a transparent stream overlay.</p>
+  </details>
+
+  <footer>
+    <span id="srcTxt">Data: api.squeekchain.com</span>
+    <span id="foot2">&nbsp;</span>
+    <a id="coreLink" href="https://sepolia.etherscan.io/" target="_blank" rel="noopener" hidden>SqueekCore on Sepolia</a>
+    <a href="https://squeekchain.com/" target="_blank" rel="noopener">squeekchain.com</a>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(() => {
+'use strict';
+const API = 'https://api.squeekchain.com';
+const KEY = 'wheelbound.v1';
+const LM_MM = 5000000;           // a landmark every 5 km
+const BIOME_MM = 25000000;       // the land changes every 25 km
+const DAY = 86400000, HALF = 1800000;
+const $ = id => document.getElementById(id);
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const num = x => (typeof x === 'string' || typeof x === 'number') && String(x).trim() !== '' && Number.isFinite(+x) ? +x : NaN;
+const km = mm => (mm / 1e6);
+const fmtKm = (mm, d = 1) => km(mm).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' km';
+const fmtInt = n => Math.round(n).toLocaleString('en-US');
+const hhmm = ms => { const d = new Date(ms); return String(d.getUTCHours()).padStart(2, '0') + ':' + String(d.getUTCMinutes()).padStart(2, '0'); };
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dateLabel = s => { const [y, m, d] = s.split('-').map(Number); return MONTHS[m - 1] + ' ' + d; };
+
+/* ---------- deterministic randomness: same seed, same story for everyone ---------- */
+function hash(str){ let h1 = 0xdeadbeef ^ str.length, h2 = 0x41c6ce57 ^ str.length;
+  for (let i = 0; i < str.length; i++) { const c = str.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (h2 >>> 0) * 4294967296 + (h1 >>> 0); }
+function rng(seed){ let a = hash(seed) % 4294967296; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const pick = (r, arr) => arr[Math.floor(r() * arr.length) % arr.length];
+
+/* ---------- the world ---------- */
+const BIOMES = [
+  { name:'Seed Meadows', prop:'flowers', sky:['#20314a','#5b7d8a'], hills:['#2f5b4a','#3f7a55'], accent:'#ffd36e', flavor:['Sunflower seeds lay in drifts along the path.','The meadow grass stood taller than any hamster.','Clover leaves dripped with the evening dew.'] },
+  { name:'Cardboard Canyons', prop:'mesa', sky:['#2a2233','#8a5d4a'], hills:['#6b4a33','#8f6440'], accent:'#ffb36b', flavor:['Corrugated cliffs rose on either side.','Paper-thin bridges spanned the narrow gorges.','The canyon walls still smelled faintly of packing tape.'] },
+  { name:'Sawdust Dunes', prop:'dune', sky:['#2b2a3a','#b08f6a'], hills:['#a8875c','#c9a774'], accent:'#fff0b8', flavor:['Soft dunes shifted under every step.','A warm wind lifted the sawdust into little spirals.','The dunes rolled on, pale gold, as far as whiskers could sense.'] },
+  { name:'Copper Wire Marshes', prop:'reeds', sky:['#14262c','#3f6f6a'], hills:['#2a4f4a','#b46a3c'], accent:'#ff9d5c', flavor:['Coils of copper glinted in the reeds.','The marsh hummed with a low electric song.','Every puddle reflected a tangle of bright wire.'] },
+  { name:'Sunflower Forest', prop:'sunflower', sky:['#1f2b20','#6f8a3f'], hills:['#3f5a26','#d3a72f'], accent:'#ffe066', flavor:['Giant sunflowers turned to watch the runner pass.','Petals the size of blankets drifted down.','Bees the size of acorns drowsed in the canopy.'] },
+  { name:'Glass Bottle Coast', prop:'bottles', sky:['#10263a','#3e8aa1'], hills:['#2c6a80','#7fc3c9'], accent:'#bff6ff', flavor:['Sea glass crunched like sugar along the shore.','Bottles bobbed in the surf, each holding a tiny lighthouse.','Salt spray caught the light in green and blue.'] },
+  { name:'Moonlit Burrows', prop:'arches', sky:['#0d0f24','#3a2f6b'], hills:['#2a2350','#4b3d86'], accent:'#d9c9ff', flavor:['Tunnels branched away into soft blue darkness.','Glow-worms lit the burrow ceilings like stars.','Somewhere deep below, another wheel was turning.'] },
+  { name:'Lantern Steppe', prop:'lanterns', sky:['#241a24','#a0603a'], hills:['#5a3a2a','#9a5a30'], accent:'#ffc861', flavor:['Paper lanterns hung from the dry grass, swaying.','The steppe glowed orange at every horizon.','Travellers had left lanterns burning for whoever came next.'] },
+];
+const LM_A = ['Sunflower','Whisker','Clover','Thimble','Acorn','Marble','Lantern','Burrow','Pumpkin','Chestnut','Saffron','Dandelion','Teacup','Button','Walnut','Bramble','Pebble','Velvet','Cinnamon','Hazel'];
+const LM_B = ['Gate','Falls','Bridge','Hollow','Tower','Crossing','Ridge','Well','Arch','Ford','Spire','Steps','Grove','Lighthouse','Market','Mill','Gardens','Pass'];
+const BOSSES = [
+  ['the Lint Leviathan','It drifts out of the dryer vents, bigger every week.'],
+  ['Sir Hoover the Ravenous','A knight of the vacuum order who swallows trails whole.'],
+  ['the Clockwork Cat','Tick, tock. It never sleeps and never stops counting.'],
+  ['the Static Storm','A crackling cloud that makes every whisker stand on end.'],
+  ['Old Mopsy the Broom','She sweeps the path clean of anything small enough.'],
+  ['the Great Gray Owl','Silent wings over the trail, every night of the week.'],
+  ['the Sock Golem','Built from every sock that ever went missing.'],
+  ['the Dust Bunny King','He rules the shadows under the furniture of the world.'],
+  ['Baron von Vacuum','He wants the wheel stopped, and the runner with it.'],
+  ['the Midnight Mousetrap','It waits with the patience of spring steel.'],
+];
+const biomeOrder = inst => { const r = rng('biomes|' + inst); const idx = BIOMES.map((_, i) => i);
+  for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+  if (idx[0] !== 0) { const z = idx.indexOf(0); [idx[0], idx[z]] = [idx[z], idx[0]]; } // the journey always starts in the Seed Meadows
+  return idx; };
+const roman = n => { const m = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']]; let s = ''; for (const [v, t] of m) while (n >= v) { s += t; n -= v; } return s; };
+function biomeAt(world, posMm){ const b = Math.floor(Math.max(0, Number.isFinite(posMm) ? posMm : 0) / BIOME_MM); const cyc = Math.floor(b / BIOMES.length);
+  const def = BIOMES[world.order[b % BIOMES.length]]; return { index: b, def, name: def.name + (cyc ? ' ' + roman(cyc + 1) : '') }; }
+// Landmark names are drawn without replacement: every combination is used once before any repeats.
+const lmPerm = inst => { const r = rng('lmperm|' + inst); const all = []; for (const a of LM_A) for (const b of LM_B) all.push(a + ' ' + b);
+  for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; } return all; };
+function landmarkName(world, k){ const p = world.lmPerm; const cyc = Math.floor((k - 1) / p.length); return 'the ' + p[(k - 1) % p.length] + (cyc ? ' ' + roman(cyc + 1) : ''); }
+// Bosses come in shuffled cycles of ten with no boss twice in a row.
+function bossFor(world, w){
+  const cyc = Math.floor(w / BOSSES.length), order = c => { const r = rng('bosses|' + world.inst + '|' + c); const idx = BOSSES.map((_, i) => i);
+    for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; } return idx; };
+  const o = order(cyc); if (cyc > 0) { const prev = order(cyc - 1); if (o[0] === prev[prev.length - 1]) [o[0], o[1]] = [o[1], o[0]]; }
+  const b = BOSSES[o[w % BOSSES.length]]; const r = rng('boss|' + world.inst + '|' + w);
+  return { name: b[0], epithet: b[1], hpMm: Math.round((45 + r() * 25) * 1e6) }; }
+
+/* ---------- persistent cache: settled rounds and where history paging left off ---------- */
+// The wheel's distance is exactly work × 878 mm on Squeekchain (the stats endpoint confirms it to the millimetre),
+// so every past day's distance comes from settled work alone and never changes.
+const MM_PER_WORK_DEFAULT = 878;
+const store = {
+  get(){ try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); return v && typeof v === 'object' ? v : null; } catch { return null; } },
+  set(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {} },
+};
+const S = {
+  inst: null, g: NaN, d: 600, offsetMs: 12 * 3600000, mmw: MM_PER_WORK_DEFAULT,
+  statsDays: [], lifetimeMm: NaN, statsAt: 0,
+  rounds: new Map(), batched: new Set(), dead: new Set(), tx: new Map(), ids: {}, walks: [], histPaging: false, settled: 0,
+  meas: [], status: null, statusAt: 0, apiErr: 0, ready: false, coreAt: 0,
+};
+// rounds are stored as runs: [[firstRound, "w,w,w,…"], …]
+function encodeRounds(){ const ks = [...S.rounds.keys()].sort((a, b) => a - b); const out = []; let cur = null;
+  for (const r of ks) { if (cur && r === cur[0] + cur[1].length) cur[1].push(S.rounds.get(r)); else { cur = [r, [S.rounds.get(r)]]; out.push(cur); } }
+  return out.map(([r, ws]) => [r, ws.join(',')]); }
+(function restore(){ const c = store.get(); if (!c || c.v !== 2) return;
+  if (typeof c.inst === 'string') S.inst = c.inst;
+  if (Array.isArray(c.runs)) for (const run of c.runs) { if (!Array.isArray(run) || !Number.isInteger(run[0]) || typeof run[1] !== 'string') continue;
+    run[1].split(',').forEach((w, i) => { const W = +w, R = run[0] + i; if (R > 0 && Number.isFinite(W) && W >= 0) S.rounds.set(R, W); }); }
+  if (Array.isArray(c.batched)) for (const r of c.batched) if (Number.isInteger(r)) S.batched.add(r);
+  if (Array.isArray(c.dead)) for (const r of c.dead) if (Number.isInteger(r) && !S.rounds.has(r)) S.dead.add(r);
+  if (Array.isArray(c.tx)) for (const t of c.tx) if (Array.isArray(t) && Number.isInteger(t[0]) && /^0x[0-9a-fA-F]{64}$/.test(t[1])) S.tx.set(t[0], { tx: t[1], a: t[2], act: t[3], cum: t[4], w: t[5] });
+  if (c.ids && typeof c.ids === 'object') for (const k of ['core', 'token', 'genesis']) if (/^0x[0-9a-fA-F]{40}$/.test(c.ids[k])) S.ids[k] = c.ids[k];
+  if (Array.isArray(c.walks)) S.walks = c.walks.filter(w => w && (w.cursor === null || typeof w.cursor === 'string') && Number.isInteger(w.stopAt))
+    .map(w => ({ cursor: w.cursor, stopAt: w.stopAt, at: Number.isInteger(w.at) ? w.at : null }));
+})();
+// Another tab may have read rounds this one has not: merge them in before writing, so tabs never undo each other.
+function persist(){
+  const c = store.get();
+  if (c && c.v === 2 && c.inst === S.inst && Array.isArray(c.runs)) for (const run of c.runs) { if (!Array.isArray(run) || !Number.isInteger(run[0]) || typeof run[1] !== 'string') continue;
+    run[1].split(',').forEach((w, i) => { const W = +w, R = run[0] + i; if (R > 0 && Number.isFinite(W) && W >= 0 && !S.rounds.has(R)) { S.rounds.set(R, W); if (Array.isArray(c.batched) && c.batched.includes(R)) S.batched.add(R); } }); }
+  store.set({ v: 2, inst: S.inst, runs: encodeRounds(), batched: [...S.batched], dead: [...S.dead].slice(-2000), tx: [...S.tx.entries()].sort((x, y) => y[0] - x[0]).slice(0, 300).map(([b, t]) => [b, t.tx, t.a, t.act, t.cum, t.w]), ids: S.ids, walks: S.walks.map(w => ({ cursor: w.cursor, stopAt: w.stopAt, at: w.at })) }); }
+// Server time: the status snapshot's generatedAt carried forward on the monotonic clock, so changing the computer's clock
+// changes nothing. The snapshot can be a little old, so the newest-looking of the recent samples wins.
+const clk = [];
+function noteServerTime(gen){ const t = Date.parse(gen); if (!Number.isFinite(t)) return; clk.push(t - performance.now()); if (clk.length > 20) clk.shift(); }
+const srvNow = () => clk.length ? Math.max(...clk) + performance.now() : Date.now();
+// A new game installation restarts everything: rounds, history paging, round config.
+function checkInst(id){ if (typeof id !== 'string' || !id) return;
+  if (S.inst && S.inst !== id) { S.rounds.clear(); S.batched.clear(); S.dead.clear(); S.tx.clear(); S.ids = {}; S.walks = []; S.meas = []; S.settled = 0; S.g = NaN; S.statsDays = []; S.lifetimeMm = NaN; S.instChanged = true; }
+  S.inst = id; }
+
+async function getJSON(path){
+  const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 15000);
+  try { const r = await fetch(API + path, { signal: ctl.signal, cache: 'no-store' }); if (!r.ok) { const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; } return await r.json(); }
+  finally { clearTimeout(to); }
+}
+async function loadCore(){
+  const j = await getJSON('/v1/core'); checkInst(j?.installationId);
+  const c = j?.configuration || {}; const g = num(c.genesisTimestamp), d = num(c.roundDuration);
+  if (g > 0 && d >= 60) { S.g = g; S.d = d; }
+  const s = num(j?.core?.settledThroughRound); if (Number.isInteger(s)) S.settled = Math.max(S.settled, s);
+  S.coreAt = Date.now();
+}
+async function loadStats(){
+  const j = await getJSON('/v1/measurement/stats?range=30d'); checkInst(j?.installationId);
+  const days = Array.isArray(j?.activity?.days) ? j.activity.days : [];
+  const start = Date.parse(j?.window?.startAt);
+  const first = days.find(d => d && typeof d.date === 'string');
+  if (first && Number.isFinite(start)) { const off = ((start - Date.parse(first.date + 'T00:00:00Z')) % DAY + DAY) % DAY; if (Number.isFinite(off)) S.offsetMs = off; }
+  const out = []; let lw = 0, lm = 0;
+  for (const d of days) {
+    if (!d || typeof d.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(d.date)) continue;
+    const startMs = Date.parse(d.date + 'T00:00:00Z') + S.offsetMs;
+    const buckets = (Array.isArray(d.buckets) ? d.buckets : []).filter(b => b && Number.isFinite(num(b.startMinuteUtc))).map(b => {
+      let t = Date.parse(d.date + 'T00:00:00Z') + num(b.startMinuteUtc) * 60000; if (t < startMs) t += DAY;
+      return { t, work: Math.max(0, num(b.workUnits) || 0) };
+    }).sort((a, b) => a.t - b.t);
+    const work = Math.max(0, num(d.observedWorkUnits) || 0), mm = num(d.distanceMm);
+    if (work > 0 && mm > 0) { lw += work; lm += mm; }
+    out.push({ date: d.date, startMs, work, distMm: mm, buckets });
+  }
+  if (out.length) S.statsDays = out;
+  if (lw > 0 && lm > 0 && Math.abs(lm / lw - Math.round(lm / lw)) < 1e-6) S.mmw = Math.round(lm / lw);
+  const life = num(j?.lifetime?.observedDistanceMm); if (life >= 0) S.lifetimeMm = life;
+  S.statsAt = Date.now();
+}
+async function loadStatus(){
+  const j = await getJSON('/v1/status'); if (!j || typeof j !== 'object') throw new Error('bad status');
+  checkInst(j.installationId); S.status = j; S.statusAt = Date.now(); noteServerTime(j.generatedAt);
+  const s = num(j?.builder?.anchor?.settledThroughRound); if (Number.isInteger(s)) S.settled = Math.max(S.settled, s);
+}
+async function loadMeas(){
+  const all = []; let cur = null;
+  for (let i = 0; i < 40; i++) {
+    const j = await getJSON('/v1/events?category=measurement&limit=100' + (cur ? '&cursor=' + encodeURIComponent(cur) : ''));
+    checkInst(j?.installationId);
+    for (const e of (Array.isArray(j?.events) ? j.events : [])) if (e && typeof e.type === 'string' && e.payload && typeof e.payload === 'object' && Number.isFinite(Date.parse(e.occurredAt))) all.push({ type: e.type, at: Date.parse(e.occurredAt), p: e.payload });
+    cur = typeof j?.nextCursor === 'string' && j.nextCursor ? j.nextCursor : null; if (!cur) break;
+  }
+  S.meas = all;
+}
+const isAddr = a => typeof a === 'string' && /^0x[0-9a-fA-F]{40}$/.test(a);
+const isHash = h => typeof h === 'string' && /^0x[0-9a-fA-F]{64}$/.test(h);
+// Squeekchain's contracts on Sepolia, as the API names them
+function noteIds(ids){ if (!ids || typeof ids !== 'object') return; for (const k of ['core', 'token', 'genesis']) if (isAddr(ids[k])) S.ids[k] = ids[k]; }
+// the settlement transaction behind each of the newest rounds, so every hit can be checked on Sepolia
+function noteTx(e){ const src = e.source, p = e.payload; const b = num(p.settledThroughRound);
+  if (!src || !isHash(src.transactionHash) || !Number.isInteger(b)) return;
+  S.tx.set(b, { tx: src.transactionHash, a: num(p.previousSettledThroughRound), act: num(p.activeRoundCount), cum: num(p.cumulativeWork), w: num(p.workAdded) });
+  if (S.tx.size > 300) S.tx.delete(Math.min(...S.tx.keys())); }
+function applySettlement(p){
+  const a = num(p.previousSettledThroughRound), b = num(p.settledThroughRound), act = num(p.activeRoundCount), w = num(p.workAdded);
+  if (!Number.isInteger(a) || !Number.isInteger(b) || a < 0 || b <= a || b - a > 5000) return null;
+  S.settled = Math.max(S.settled, b);
+  if (b - a === 1 && w >= 0) { S.rounds.set(b, w); S.batched.delete(b); }
+  else if (act === 0) for (let r = a + 1; r <= b; r++) { S.rounds.set(r, 0); S.batched.delete(r); }
+  else if (w >= 0) { for (let r = a + 1; r < b; r++) { S.rounds.set(r, 0); S.batched.add(r); } S.rounds.set(b, w); S.batched.add(b); } // a batch: its work sits on its last round, marked
+  return a + 1;
+}
+// History is read as walks down the settlement feed (newest first). A walk reads from its cursor down to its stop round
+// and ends only itself. Every pass starts a walk from the newest page down to the highest cached round, plus a walk for
+// every hole in the cached rounds that no walk covers yet, so a cut-short or failed walk is healed on a later pass.
+// When the feed refuses a cursor or ends a page early (it sometimes does), that walk waits a few passes and every second
+// failure starts it again from the newest page, with fresh cursors.
+function holes(top){ const out = []; let a = null;
+  for (let r = 1; r <= top; r++) { if (S.rounds.has(r) || S.dead.has(r)) { if (a != null) { out.push([a, r - 1]); a = null; } } else if (a == null) a = r; }
+  if (a != null) out.push([a, top]); return out; }
+// restart: start the walk again from the newest page (a refused or expired cursor); otherwise retry the same cursor later
+function walkFailed(w, restart){ w.fails = (w.fails || 0) + 1; if (restart || !w.cursor) { w.cursor = null; w.at = null; w.hi = undefined; } w.skip = w.fails > 1 ? Math.min(30, 2 ** (w.fails - 1)) : 0; }
+async function loadHistory(budget, onPage){
+  if (S.histPaging) return; S.histPaging = true;
+  try {
+    let top = 0; for (const r of S.rounds.keys()) if (r > top) top = r;
+    for (const w of S.walks) if (w.skip > 0) w.skip--;
+    const fresh = S.walks.find(w => w.cursor === null && w.at === null && !(w.skip > 0));
+    if (fresh) fresh.stopAt = Math.min(fresh.stopAt, top); else S.walks.unshift({ cursor: null, stopAt: top, at: null });
+    for (const [a, b] of holes(top)) if (!S.walks.some(w => w.stopAt < a && (w.at === null || w.at > b))) S.walks.push({ cursor: null, stopAt: a - 1, at: null });
+    let pages = 0; const walks = S.walks;
+    while (pages < budget) {
+      const w = S.walks.find(x => !(x.skip > 0)); if (!w) break;
+      let j;
+      try { j = await getJSON('/v1/events?category=protocol&limit=100' + (w.cursor ? '&cursor=' + encodeURIComponent(w.cursor) : '')); }
+      catch (e) { if (S.walks !== walks) break; if ([400, 404, 410].includes(e.status)) { walkFailed(w, true); pages++; continue; } throw e; } // 429 and 5xx: wait for the next pass
+      if (S.walks !== walks) break;
+      checkInst(j?.installationId); if (S.walks !== walks) break;                   // a new installation reset the history
+      noteIds(j?.identities);
+      pages++;
+      let min = Infinity; const evs = Array.isArray(j?.events) ? j.events : [];
+      const fromTop = w.cursor === null;
+      for (const e of evs) {
+        if (!e || e.type !== 'system.settlement_completed' || !e.payload || typeof e.payload !== 'object') continue;
+        const lo = applySettlement(e.payload); if (lo != null) { min = Math.min(min, lo); noteTx(e); if (fromTop && w.at === null) w.hi = Math.max(w.hi || 0, num(e.payload.settledThroughRound)); }
+      }
+      if (Number.isFinite(min)) w.at = w.at === null ? min : Math.min(w.at, min);
+      const next = typeof j?.nextCursor === 'string' && j.nextCursor ? j.nextCursor : null;
+      if (w.at !== null && w.at <= w.stopAt + 1) {                                        // reached its stop round
+        S.walks.splice(S.walks.indexOf(w), 1);
+        // a walk read every settlement from its top down: rounds still missing in that range have no usable settlement
+        if (w.hi > 0) for (let r = w.stopAt + 1; r <= w.hi; r++) if (!S.rounds.has(r)) S.dead.add(r);
+      }
+      else if (!next || next === w.cursor) walkFailed(w, !evs.length);                   // the feed ended above it: try again later
+      else w.cursor = next;
+      if (pages % 5 === 0) persist();
+      if (onPage) onPage();
+    }
+    persist();
+  } finally { S.histPaging = false; }
+}
+
+/* ---------- building the story from the data ---------- */
+const roundEnd = r => (S.g + r * S.d) * 1000;
+const dayStartOf = t => Math.floor((t - S.offsetMs) / DAY) * DAY + S.offsetMs;
+const dateOfStart = s => new Date(s - S.offsetMs).toISOString().slice(0, 10);
+function buildWorld(){
+  const inst = S.inst || 'squeekchain';
+  const world = { inst, order: biomeOrder(inst), lmPerm: lmPerm(inst), days: [], landmarks: [], weeks: [], posMm: NaN, now: srvNow(), complete: false };
+  if (!Number.isFinite(S.g)) return world;
+  const now = world.now; const mmw = S.mmw;
+  const stats = new Map(S.statsDays.map(d => [d.date, d]));
+  const g0 = dayStartOf(roundEnd(1) - 1);
+  for (let s = g0, i = 0; s <= now; s += DAY, i++) {
+    const date = dateOfStart(s); const d = { date, startMs: s, endMs: s + DAY, index: i, chapter: i + 1, isToday: now < s + DAY };
+    const r0 = Math.floor((s / 1000 - S.g) / S.d) + 1, r1 = Math.floor(((s + DAY) / 1000 - S.g) / S.d);
+    const list = []; let missing = 0, batched = false;
+    let inner = false; // today: newest rounds not read yet are fine (the live counter covers them); a gap before a read round is not
+    let dead = 0;
+    for (let r = Math.max(1, r0); r <= r1; r++) { if (roundEnd(r) > now || r > S.settled) break; const w = S.rounds.get(r); if (w === undefined) { missing++; if (S.dead.has(r)) dead++; continue; } if (missing) inner = true; if (S.batched.has(r)) batched = true; list.push({ r, w, end: roundEnd(r), batched: S.batched.has(r) }); }
+    if (d.isToday && !inner && list.length > 0 && missing <= 6) missing = 0;
+    d.rounds = list; d.batched = batched;
+    // a past day is final only once all its rounds have settled; until then it is 'settling' and uses the stats day
+    d.complete = missing === 0 && (d.isToday ? (list.length > 0 || r0 > S.settled) : S.settled >= r1);
+    d.settling = !d.isToday && !d.complete && missing === 0 && S.settled < r1;
+    d.gap = !d.isToday && missing > 0 && missing === dead && S.settled >= r1;          // rounds the feed never settled: told from the stats
+    const st = stats.get(date);
+    if (d.complete) { d.work = list.reduce((a, x) => a + x.w, 0); d.buckets = []; for (const x of list) { const bt = s + Math.floor((x.end - 1 - s) / HALF) * HALF; const b = d.buckets[d.buckets.length - 1]; if (b && b.t === bt) b.work += x.w; else d.buckets.push({ t: bt, work: x.w }); } }
+    else if (st) { d.work = st.work; d.buckets = st.buckets.slice(); }
+    else { d.work = NaN; d.buckets = []; }
+    d.distMm = d.work * mmw;
+    world.days.push(d);
+  }
+  // today runs ahead of the settled rounds: the live counter has the newest distance
+  const today = world.days[world.days.length - 1];
+  const m = S.status?.measurement; const liveMm = num(m?.distanceMm), obs = Date.parse(m?.observedAt);
+  if (today && today.isToday && Number.isFinite(liveMm) && obs >= today.startMs && obs < today.endMs && (!Number.isFinite(today.distMm) || liveMm > today.distMm)) { today.liveExtraMm = liveMm - (Number.isFinite(today.distMm) ? today.distMm : 0); today.distMm = liveMm; today.liveAt = obs; }
+  // positions: summed from the first round when every day is known; otherwise anchored to Squeekchain's lifetime total and counted back
+  const allKnown = world.days.every(d => Number.isFinite(d.distMm));
+  let total = NaN;
+  if (allKnown) total = world.days.reduce((a, d) => a + d.distMm, 0);
+  else if (Number.isFinite(S.lifetimeMm)) { const st = stats.get(today.date); total = S.lifetimeMm - (st && Number.isFinite(st.distMm) ? st.distMm : 0) + (Number.isFinite(today.distMm) ? today.distMm : 0); }
+  world.complete = allKnown && world.days.every(d => d.complete || d.isToday || d.settling || d.gap);
+  let end = total;
+  for (let i = world.days.length - 1; i >= 0; i--) { const d = world.days[i]; if (!Number.isFinite(end) || !Number.isFinite(d.distMm)) { d.endPos = NaN; d.startPos = NaN; end = NaN; continue; } d.endPos = end; d.startPos = end - d.distMm; end = d.startPos; }
+  world.posMm = total;
+  if (!Number.isFinite(total)) return world;
+  // landmarks with the moment each was reached
+  const lastK = Math.floor(total / LM_MM) + 6;
+  for (let k = 1; k <= lastK; k++) { const at = LM_MM * k; const lm = { k, mm: at, name: landmarkName(world, k), passed: at <= total };
+    if (lm.passed) { const d = world.days.find(x => x.startPos < at && at <= x.endPos); if (d) { lm.day = d; lm.atMs = timeAtPos(d, at); } }
+    world.landmarks.push(lm); }
+  // weekly bosses: week n covers wheel days 7n .. 7n+6 counted from the first round
+  for (let w = 0; g0 + w * 7 * DAY <= now; w++) {
+    const ws = g0 + w * 7 * DAY, we = ws + 7 * DAY; const boss = bossFor(world, w);
+    const wd = world.days.filter(d => d.startMs >= ws && d.startMs < we); let dmg = 0, defeatedAt = null, defeatedDay = null, known = true;
+    for (const d of wd) { if (!Number.isFinite(d.distMm)) { known = false; break; } if (defeatedAt == null && dmg + d.distMm >= boss.hpMm) { defeatedAt = Number.isFinite(d.startPos) ? timeAtPos(d, d.startPos + (boss.hpMm - dmg)) : d.startMs; defeatedDay = d; } dmg += d.distMm; }
+    world.weeks.push({ w, ws, we, ...boss, dmgMm: known ? dmg : NaN, known, defeatedAt: known ? defeatedAt : null, defeatedDay: known ? defeatedDay : null, done: now >= we, days: wd });
+  }
+  return world;
+}
+// The moment within a day when the runner reached position p, spreading the day's distance over its work.
+function timeAtPos(d, p){
+  const need = clamp((p - d.startPos) / Math.max(1, d.distMm), 0, 1) * (d.distMm / S.mmw);
+  let acc = 0;
+  if (d.complete) for (const x of d.rounds) { if (x.w > 0 && acc + x.w >= need) return x.end - S.d * 1000 * (1 - (need - acc) / x.w); acc += x.w; }
+  else for (const b of d.buckets) { if (b.work > 0 && acc + b.work >= need) return b.t + HALF * ((need - acc) / b.work); acc += b.work; }
+  return d.liveAt || (d.isToday ? Math.min(srvNow(), d.endMs) : d.endMs);
+}
+
+/* ---------- the words ---------- */
+// Facts always come from settled rounds, so a chapter reads the same for everyone once its day is read.
+function dayFacts(d){
+  const f = { first: null, last: null, streak: 0, streakAt: null, best: null, nap: 0, active: 0 };
+  let run = 0, runStart = null, napRun = 0, seenRun = false;
+  for (const x of d.rounds || []) {
+    if (x.w > 0) { f.active++; if (f.first == null) f.first = x.end - S.d * 1000; f.last = x.end; if (!x.batched && (!f.best || x.w > f.best.w)) f.best = x;
+      if (run === 0) runStart = x.end - S.d * 1000; run++; if (run > f.streak) { f.streak = run; f.streakAt = [runStart, x.end]; } if (seenRun) f.nap = Math.max(f.nap, napRun); napRun = 0; seenRun = true; }
+    else { run = 0; if (seenRun) napRun++; }
+  }
+  f.minutes = f.active * S.d / 60;
+  return f;
+}
+const ordinal = n => n + ((n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th'));
+const durTxt = min => { min = Math.round(min); if (min < 60) return min + ' minutes'; const h = Math.floor(min / 60), m = min % 60; return h + (h === 1 ? ' hour' : ' hours') + (m ? ' ' + m + ' minutes' : ''); };
+function chapterFor(world, d){
+  const r = rng('ch|' + world.inst + '|' + d.date);
+  const bStart = biomeAt(world, d.startPos), bEnd = biomeAt(world, d.endPos);
+  const f = dayFacts(d);
+  const lms = world.landmarks.filter(l => l.day === d);
+  const evs = S.meas.filter(e => e.at >= d.startMs && e.at < d.endMs).sort((a, b) => a.at - b.at);
+  const week = world.weeks.find(w => d.startMs >= w.ws && d.startMs < w.we);
+  const fell = week && week.defeatedDay === d;
+  const rec = evs.find(e => e.type === 'measurement.speed_record');
+  const paras = [];
+  // setting
+  paras.push(pick(r, [`The ${d.isToday ? 'day' : 'chapter'} opens in the ${bStart.name}.`, `Squeektoshi woke in the ${bStart.name}.`, `Morning light found the trail winding through the ${bStart.name}.`]) + ' ' + pick(r, bStart.def.flavor));
+  // the running
+  const ran = d.distMm > 0;
+  if (!ran && d.isToday) {
+    paras.push(pick(r, ['The wheel has not turned yet today. Squeektoshi is still curled up in the bedding, and the trail is waiting.', 'No running yet today. The lanterns are lit and the path is clear for whenever the wheel wakes.', 'So far the wheel is still. Most days the running starts in the evening, UTC.']));
+  } else if (!ran) {
+    paras.push(pick(r, ['The wheel never turned. Squeektoshi slept the whole day through, curled in fresh bedding.', 'A day of rest. Not a single round of running was settled on chain.', 'The trail waited. The runner did not come out that day.']));
+  } else if (f.first == null) {
+    paras.push(`The wheel is turning right now. So far today Squeektoshi has run ${fmtKm(d.distMm)}; the first round of it has not settled on chain yet.`);
+  } else {
+    let s = `The wheel first turned at ${hhmm(f.first)} UTC`;
+    if (d.isToday) s += (f.last && f.last - f.first > HALF ? `, and the latest settled round ended at ${hhmm(f.last)}.` : '.') + ` So far today, Squeektoshi has run ${fmtKm(d.distMm)}` + (f.minutes ? ` over about ${durTxt(f.minutes)} on the wheel.` : '.');
+    else s += (f.last && f.last - f.first > HALF ? ` and stopped for the last time at ${hhmm(f.last)}.` : '.') + ` By the end of the day, Squeektoshi had run ${fmtKm(d.distMm)}` + (f.minutes ? ` over about ${durTxt(f.minutes)} on the wheel.` : '.');
+    paras.push(s);
+    const bits = [];
+    if (f.streak > 1 && f.streakAt) bits.push(`The longest unbroken run lasted ${durTxt(f.streak * S.d / 60)}, from ${hhmm(f.streakAt[0])} to ${hhmm(f.streakAt[1])}.`);
+    if (f.best && f.best.w > 0) bits.push(`Round ${f.best.r} was the fiercest: ${fmtInt(f.best.w)} units of work in ten minutes.`);
+    if (f.nap >= 12) bits.push(`In between came a long nap of ${durTxt(f.nap * S.d / 60)}.`);
+    if (bits.length) paras.push(bits.join(' '));
+  }
+  // places
+  if (lms.length) paras.push((lms.length === 1 ? 'The trail passed ' : 'The trail passed ') + lms.map(l => `${l.name} at ${hhmm(l.atMs)}`).join(', ').replace(/, ([^,]*)$/, ' and $1') + '.');
+  if (bEnd.index !== bStart.index) paras.push(`Then the land changed. ${bEnd.name.replace(/^./, c => c.toUpperCase())} lay ahead. ${pick(r, bEnd.def.flavor)}`);
+  // records and milestones from Squeekchain's own measurement events
+  const ms = [];
+  for (const e of evs) {
+    if (e.type === 'measurement.distance_milestone' && num(e.p.thresholdDistanceMm) > 0) ms.push(`At ${hhmm(e.at)} the journey passed ${fmtKm(num(e.p.thresholdDistanceMm), 0)} since the very first turn.`);
+    else if (e.type === 'measurement.speed_record' && num(e.p.recordMmPerSecond) > 0) ms.push(`At ${hhmm(e.at)} came a new speed record: ${(num(e.p.recordMmPerSecond) / 1000).toFixed(2)} m/s, faster than ever before.`);
+    else if (e.type === 'measurement.distance_streak' && num(e.p.days) > 1 && num(e.p.minimumDailyDistanceMm) > 0) ms.push(`It was the ${ordinal(num(e.p.days))} day in a row of at least ${fmtKm(num(e.p.minimumDailyDistanceMm), 0)}.`);
+  }
+  const daily = evs.filter(e => e.type === 'measurement.daily_distance_milestone').map(e => num(e.p.thresholdDistanceMm)).filter(x => x > 0);
+  if (daily.length) ms.push(`The day's own distance markers fell one by one, up to ${fmtKm(Math.max(...daily), 0)}.`);
+  for (const m0 of ms) paras.push(m0);
+  // the boss
+  if (week) {
+    if (fell) paras.push(`And at ${hhmm(week.defeatedAt)} UTC, ${week.name} fell. ${fmtKm(week.hpMm, 0)} of running had worn it down.`);
+    else if (!week.defeatedAt) { const inWeek = week.days.filter(x => x.startMs <= d.startMs).reduce((a, x) => a + x.distMm, 0); const left = Math.max(0, week.hpMm - inWeek);
+      if (ran && week.known) paras.push(`Every turn struck ${week.name}. ${fmtKm(left)} of its strength ${week.done || !d.isToday ? 'remained after this day' : 'remains'}.`); }
+  }
+  // close
+  paras.push(d.isToday ? 'The day is still being written. Every settled round adds a line.' : pick(r, ['Night settled over the trail.', 'The lanterns along the path went out one by one.', 'Somewhere ahead, the next landmark waited.', 'The wheel creaked softly, and then all was quiet.']));
+  // title
+  let title;
+  if (fell) title = `The Fall of ${week.name}`;
+  else if (rec) title = 'Faster Than Ever';
+  else if (!ran) title = d.isToday ? 'Before the Run' : 'A Day of Rest';
+  else if (bEnd.index !== bStart.index) title = `Into the ${bEnd.name}`;
+  else if (lms.length) title = `Past ${lms[lms.length - 1].name}`;
+  else title = pick(r, ['The Long Road', 'Small Feet, Long Miles', 'Under the Lanterns', 'The Quiet Stretch', 'Onward', 'Whiskers to the Wind']);
+  title = title.replace(/^./, c => c.toUpperCase());
+  return { title, paras, f, lms, bStart, bEnd, fell, week };
+}
+
+/* ---------- the paintings ---------- */
+function hexRgb(h){ const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+const rgba = (h, a) => { const [r, g, b] = hexRgb(h); return `rgba(${r},${g},${b},${a})`; };
+const mix = (h1, h2, t) => { const a = hexRgb(h1), b = hexRgb(h2); return '#' + a.map((v, i) => Math.round(v + (b[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
+function series(d){ const s = new Array(48).fill(0); for (const b of d.buckets) { const i = Math.floor((b.t - d.startMs) / HALF); if (i >= 0 && i < 48) s[i] += b.work; }
+  if (d.liveExtraMm > 0) { const i = clamp(Math.floor(((d.liveAt || srvNow()) - d.startMs) / HALF), 0, 47); s[i] += d.liveExtraMm / S.mmw; } // running not settled yet
+  return s; }
+function smooth(a, k){ return a.map((_, i) => { let s = 0, n = 0; for (let j = -k; j <= k; j++) { const v = a[i + j]; if (v !== undefined) { s += v; n++; } } return s / n; }); }
+const lmKind = name => name.split(' ').find(w => LM_B.includes(w)) || 'Ridge';
+
+// Decorative art is optional until decoded; all data-driven drawing works without it.
+const trailArt = new Image();
+trailArt.decoding = 'async';
+trailArt.src = 'art/night-trail.webp';
+let grainTile = null;
+
+/** @param {CanvasRenderingContext2D} c */
+function artGlow(c, x, y, radius, color, alpha){
+  const g = c.createRadialGradient(x, y, 0, x, y, radius);
+  g.addColorStop(0, rgba(color, alpha)); g.addColorStop(.35, rgba(color, alpha * .35)); g.addColorStop(1, rgba(color, 0));
+  c.fillStyle = g; c.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+}
+
+/** @param {CanvasRenderingContext2D} c */
+function drawNightSky(c, W, H, def, r){
+  const g = c.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#0b1423'); g.addColorStop(.5, mix(def.sky[0], '#13243a', .6)); g.addColorStop(1, mix(def.sky[1], '#142c37', .65));
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+  if (trailArt.complete && trailArt.naturalWidth > 0) {
+    c.save(); c.globalAlpha = .72; c.drawImage(trailArt, 0, 0, W, H); c.restore();
+  }
+  for (let i = 0; i < 100; i++) {
+    const x = r() * W, y = r() * H * .56, size = (.4 + r() * 1.3) * W / 1600;
+    c.fillStyle = rgba('#f3eddf', .18 + r() * .5); c.beginPath(); c.arc(x, y, size, 0, Math.PI * 2); c.fill();
+    if (i % 23 === 0) { c.strokeStyle = rgba('#d8e6ee', .4); c.lineWidth = W / 1800; c.beginPath(); c.moveTo(x - size * 3, y); c.lineTo(x + size * 3, y); c.moveTo(x, y - size * 3); c.lineTo(x, y + size * 3); c.stroke(); }
+  }
+}
+
+/** @param {CanvasRenderingContext2D} c */
+function drawMoon(c, x, y, radius, seed){
+  c.save(); artGlow(c, x, y, radius * 4.5, '#b8d2d7', .25); artGlow(c, x, y, radius * 1.7, '#fff0c4', .18);
+  const g = c.createRadialGradient(x - radius * .4, y - radius * .4, 0, x, y, radius);
+  g.addColorStop(0, '#fff8df'); g.addColorStop(.8, '#e9e4c8'); g.addColorStop(1, '#bac9c1');
+  c.fillStyle = g; c.beginPath(); c.arc(x, y, radius, 0, Math.PI * 2); c.fill(); c.clip();
+  const r = rng('moon|' + seed);
+  for (let i = 0; i < 30; i++) {
+    const cx = x + (r() - .5) * radius * 1.8, cy = y + (r() - .5) * radius * 1.8, cr = radius * (.025 + r() * .15);
+    c.fillStyle = rgba('#788f99', .05 + r() * .1); c.beginPath(); c.ellipse(cx, cy, cr * 1.2, cr, r(), 0, 7); c.fill();
+    c.strokeStyle = 'rgba(255,255,235,.15)'; c.lineWidth = radius * .012; c.stroke();
+  }
+  c.restore();
+}
+
+/** @param {CanvasRenderingContext2D} c */
+function drawHill(c, W, H, base, amp, color, seed, offset, trees = false){
+  c.save(); const r = rng(seed); const p = [r() * 6, r() * 6, r() * 6];
+  const height = x => base - amp * (.5 + .3 * Math.sin((x + offset) / W * 6 + p[0]) + .14 * Math.sin((x + offset) / W * 13 + p[1]) + .06 * Math.sin((x + offset) / W * 27 + p[2]));
+  const g = c.createLinearGradient(0, base - amp, 0, H); g.addColorStop(0, color); g.addColorStop(1, mix(color, '#08131c', .65));
+  c.fillStyle = g; c.beginPath(); c.moveTo(0, H);
+  for (let x = 0; x <= W + 8; x += 8) c.lineTo(x, height(x));
+  c.lineTo(W, H); c.closePath(); c.fill();
+  c.strokeStyle = rgba('#b7d0c3', .08); c.lineWidth = H * .002;
+  c.beginPath(); for (let x = 0; x <= W + 8; x += 8) { if (x === 0) c.moveTo(x, height(x)); else c.lineTo(x, height(x)); } c.stroke();
+  if (trees) for (let i = 0; i < 44; i++) {
+    const x = r() * W, y = height(x) + 3, h = H * (.015 + r() * .055);
+    c.fillStyle = mix(color, '#061420', .25); c.beginPath(); c.moveTo(x - h * .25, y); c.lineTo(x - h * .15, y - h * .35); c.lineTo(x - h * .2, y - h * .35); c.lineTo(x - h * .08, y - h * .7); c.lineTo(x - h * .12, y - h * .7); c.lineTo(x, y - h); c.lineTo(x + h * .12, y - h * .7); c.lineTo(x + h * .08, y - h * .7); c.lineTo(x + h * .2, y - h * .35); c.lineTo(x + h * .15, y - h * .35); c.lineTo(x + h * .25, y); c.closePath(); c.fill();
+  }
+  c.restore();
+}
+
+/** @param {CanvasRenderingContext2D} c */
+function drawLantern(c, x, y, s){
+  c.save(); artGlow(c, x, y, s * 6, '#ffc861', .23); artGlow(c, x, y, s * 2, '#ffba55', .24);
+  c.strokeStyle = '#6d583b'; c.lineWidth = s * .13; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(x + s * 1.2, y + s * 2.3); c.lineTo(x + s * 1.2, y - s * 2.1); c.bezierCurveTo(x + s * 1.2, y - s * 3, x - s * .1, y - s * 3, x, y - s * 1.5); c.stroke();
+  const glass = c.createLinearGradient(x - s * .6, 0, x + s * .6, 0); glass.addColorStop(0, '#e99a38'); glass.addColorStop(.5, '#fff2bb'); glass.addColorStop(1, '#ffbf55');
+  c.fillStyle = glass; c.beginPath(); c.moveTo(x - s * .65, y - s * .75); c.lineTo(x + s * .65, y - s * .75); c.lineTo(x + s * .48, y + s * .75); c.quadraticCurveTo(x, y + s * .94, x - s * .48, y + s * .75); c.closePath(); c.fill();
+  c.strokeStyle = '#a77c42'; c.lineWidth = s * .11; c.stroke(); c.beginPath(); c.moveTo(x - s * .35, y - s * .75); c.lineTo(x - s * .26, y + s * .75); c.moveTo(x + s * .35, y - s * .75); c.lineTo(x + s * .26, y + s * .75); c.stroke();
+  c.fillStyle = '#9c733e'; c.beginPath(); c.ellipse(x, y - s * .84, s * .8, s * .18, 0, 0, 7); c.fill(); c.beginPath(); c.moveTo(x - s * .66, y - s * .85); c.quadraticCurveTo(x, y - s * 1.8, x + s * .66, y - s * .85); c.fill();
+  c.fillStyle = '#d7aa62'; c.beginPath(); c.ellipse(x, y + s * .8, s * .63, s * .12, 0, 0, 7); c.fill();
+  c.fillStyle = '#fff9db'; c.beginPath(); c.ellipse(x, y + s * .1, s * .13, s * .43, 0, 0, 7); c.fill();
+  c.restore();
+}
+
+/** @param {CanvasRenderingContext2D} c */
+function finishPainting(c, W, H){
+  if (!grainTile) {
+    grainTile = document.createElement('canvas'); grainTile.width = 96; grainTile.height = 96;
+    const g = grainTile.getContext('2d');
+    if (g) { const r = rng('wheelbound|paper-grain'); for (let i = 0; i < 1300; i++) { g.fillStyle = r() > .5 ? '#ffffff' : '#000000'; g.globalAlpha = .03 + r() * .1; g.fillRect(r() * 96, r() * 96, 1, 1); } }
+  }
+  c.save(); const paper = c.createPattern(grainTile, 'repeat'); if (paper) { c.fillStyle = paper; c.fillRect(0, 0, W, H); }
+  const v = c.createRadialGradient(W * .5, H * .45, H * .35, W * .5, H * .45, W * .7); v.addColorStop(0, 'rgba(4,9,17,0)'); v.addColorStop(1, 'rgba(4,9,17,.48)'); c.fillStyle = v; c.fillRect(0, 0, W, H); c.restore();
+}
+
+/** @param {CanvasRenderingContext2D} c */
+function drawTrailGround(c, W, H, seed){
+  c.save(); const k = W / 1600, r = rng('ground|' + seed);
+  const earth = c.createLinearGradient(0, H * .83, 0, H); earth.addColorStop(0, '#34433a'); earth.addColorStop(.25, '#575344'); earth.addColorStop(1, '#101c23');
+  c.fillStyle = earth; c.beginPath(); c.moveTo(0, H * .9); c.bezierCurveTo(W * .22, H * .8, W * .36, H * .99, W * .67, H * .89); c.bezierCurveTo(W * .8, H * .85, W * .91, H * .86, W, H * .9); c.lineTo(W, H); c.lineTo(0, H); c.closePath(); c.fill();
+  artGlow(c, W * .47, H * .95, H * .38, '#ffbc54', .13);
+  for (let i = 0; i < 110; i++) {
+    const x = r() * W, y = H * (.92 + r() * .08), s = (1 + r() * 5) * k;
+    c.fillStyle = i % 4 ? 'rgba(171,155,113,.17)' : 'rgba(11,20,26,.5)'; c.beginPath(); c.ellipse(x, y, s * 1.8, s * .5, r(), 0, 7); c.fill();
+  }
+  c.restore();
+}
+
+// A small silhouette for each kind of landmark, standing on baseY with height h.
+function drawLandmark(c, kind, x, baseY, h, col){
+  c.save(); const stone = c.createLinearGradient(x - h * .3, 0, x + h * .3, 0); stone.addColorStop(0, mix(col, '#9aab9a', .18)); stone.addColorStop(.5, col); stone.addColorStop(1, mix(col, '#07141d', .4)); c.fillStyle = stone; c.strokeStyle = col; c.lineWidth = Math.max(2, h * .045); c.lineCap = 'round';
+  const w = h * 0.5;
+  switch (kind) {
+    case 'Tower': case 'Spire':
+      c.fillRect(x - w * 0.22, baseY - h * 0.85, w * 0.44, h * 0.85);
+      c.beginPath(); c.moveTo(x - w * 0.32, baseY - h * 0.85); c.lineTo(x, baseY - h * (kind === 'Spire' ? 1.25 : 1.05)); c.lineTo(x + w * 0.32, baseY - h * 0.85); c.fill(); break;
+    case 'Lighthouse':
+      c.beginPath(); c.moveTo(x - w * 0.3, baseY); c.lineTo(x - w * 0.16, baseY - h * 0.9); c.lineTo(x + w * 0.16, baseY - h * 0.9); c.lineTo(x + w * 0.3, baseY); c.fill();
+      c.fillRect(x - w * 0.22, baseY - h * 1.05, w * 0.44, h * 0.15); c.fillStyle = 'rgba(255,230,150,0.9)'; c.beginPath(); c.arc(x, baseY - h * 0.97, h * 0.06, 0, 7); c.fill(); break;
+    case 'Bridge': case 'Arch':
+      c.beginPath(); c.moveTo(x - w * 1.1, baseY); c.lineTo(x - w * 1.1, baseY - h * 0.55); c.quadraticCurveTo(x, baseY - h * 0.95, x + w * 1.1, baseY - h * 0.55); c.lineTo(x + w * 1.1, baseY);
+      c.lineTo(x + w * 0.7, baseY); c.quadraticCurveTo(x, baseY - h * 0.55, x - w * 0.7, baseY); c.closePath(); c.fill(); break;
+    case 'Gate':
+      c.fillRect(x - w * 0.6, baseY - h * 0.8, w * 0.22, h * 0.8); c.fillRect(x + w * 0.38, baseY - h * 0.8, w * 0.22, h * 0.8); c.fillRect(x - w * 0.75, baseY - h * 0.92, w * 1.5, h * 0.14); break;
+    case 'Mill':
+      c.fillRect(x - w * 0.25, baseY - h * 0.6, w * 0.5, h * 0.6); c.beginPath(); c.moveTo(x - w * 0.32, baseY - h * 0.6); c.lineTo(x, baseY - h * 0.8); c.lineTo(x + w * 0.32, baseY - h * 0.6); c.fill();
+      for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + 0.4; c.beginPath(); c.moveTo(x, baseY - h * 0.72); c.lineTo(x + Math.cos(a) * h * 0.45, baseY - h * 0.72 + Math.sin(a) * h * 0.45); c.stroke(); } break;
+    case 'Falls':
+      c.beginPath(); c.moveTo(x - w, baseY); c.lineTo(x - w * 0.6, baseY - h * 0.9); c.lineTo(x + w * 0.6, baseY - h * 0.8); c.lineTo(x + w, baseY); c.fill();
+      c.strokeStyle = 'rgba(200,235,255,0.85)'; for (let k = -1; k <= 1; k++) { c.beginPath(); c.moveTo(x + k * w * 0.18, baseY - h * 0.82); c.lineTo(x + k * w * 0.18, baseY); c.stroke(); } break;
+    case 'Well':
+      c.fillRect(x - w * 0.35, baseY - h * 0.3, w * 0.7, h * 0.3); c.fillRect(x - w * 0.32, baseY - h * 0.75, w * 0.08, h * 0.45); c.fillRect(x + w * 0.24, baseY - h * 0.75, w * 0.08, h * 0.45);
+      c.beginPath(); c.moveTo(x - w * 0.5, baseY - h * 0.72); c.lineTo(x, baseY - h * 0.95); c.lineTo(x + w * 0.5, baseY - h * 0.72); c.fill(); break;
+    case 'Market':
+      for (let k = -1; k <= 1; k++) { const cx = x + k * w * 0.7; c.beginPath(); c.moveTo(cx - w * 0.35, baseY - h * 0.35); c.lineTo(cx, baseY - h * 0.62); c.lineTo(cx + w * 0.35, baseY - h * 0.35); c.fill(); c.fillRect(cx - w * 0.3, baseY - h * 0.35, w * 0.6, h * 0.35); } break;
+    case 'Grove': case 'Gardens': case 'Hollow':
+      for (let k = -1; k <= 1; k++) { const cx = x + k * w * 0.6, th = h * (k ? 0.6 : 0.85); c.fillRect(cx - w * 0.05, baseY - th * 0.45, w * 0.1, th * 0.45); c.beginPath(); c.arc(cx, baseY - th * 0.65, th * 0.3, 0, 7); c.fill(); } break;
+    default: // Ridge, Pass, Steps, Crossing, Ford: a cairn of stones
+      for (let k = 0; k < 4; k++) { const rr = h * (0.2 - k * 0.035); c.beginPath(); c.ellipse(x, baseY - h * 0.1 - k * h * 0.2, rr * 1.4, rr, 0, 0, 7); c.fill(); }
+  }
+  // A light in the window gives every shelter a sense of life and scale.
+  if (['Tower','Spire','Mill','Lighthouse','Well','Gate','Market'].includes(kind)) {
+    const wy = baseY - h * (kind === 'Well' || kind === 'Market' ? .26 : .53);
+    artGlow(c, x, wy, h * .24, '#ffc861', .2);
+    c.fillStyle = '#ffd486'; c.beginPath(); c.roundRect(x - h * .035, wy - h * .055, h * .07, h * .11, h * .025); c.fill();
+    c.strokeStyle = rgba('#17232a', .6); c.lineWidth = h * .009; c.beginPath(); c.moveTo(x, wy - h * .055); c.lineTo(x, wy + h * .055); c.stroke();
+  }
+  if (['Bridge','Arch','Gate'].includes(kind)) {
+    c.strokeStyle = rgba('#b8c2af', .18); c.lineWidth = h * .012;
+    for (let k = -3; k <= 3; k++) { const bx = x + k * h * .12; c.beginPath(); c.moveTo(bx, baseY - h * .3); c.lineTo(bx + h * .015, baseY - h * .48); c.stroke(); }
+    drawLantern(c, x - h * .43, baseY - h * .44, h * .035);
+  }
+  if (['Grove','Gardens','Hollow'].includes(kind)) {
+    c.fillStyle = rgba('#9bbe88', .12);
+    for (let k = -1; k <= 1; k++) { c.beginPath(); c.ellipse(x + k * w * .6 - h * .07, baseY - h * (k ? .48 : .69), h * .13, h * .07, -.3, 0, 7); c.fill(); }
+    drawLantern(c, x + h * .26, baseY - h * .27, h * .04);
+  }
+  c.restore();
+}
+
+// Foreground props that make each land look like itself.
+/** @param {CanvasRenderingContext2D} c */
+function drawProps(c, def, W, H, r, baseY, scale){
+  c.save(); const dark = mix(def.hills[1], '#081c22', .6);
+  for (let i = 0; i < 15; i++) {
+    const x = (i + .2 + r() * .6) / 15 * W, s = scale * (.55 + r() * .65), y = baseY + r() * H * .025;
+    c.fillStyle = dark; c.strokeStyle = mix(dark, '#90a77d', .24); c.lineWidth = 1.6 * s; c.lineCap = 'round';
+    // Fine, curved grass anchors every biome's larger props.
+    for (let j = -2; j <= 2; j++) { c.beginPath(); c.moveTo(x + j * 3 * s, y); c.quadraticCurveTo(x + j * 6 * s, y - 14 * s, x + j * 9 * s, y - (20 + r() * 20) * s); c.stroke(); }
+    switch (def.prop) {
+      case 'flowers': case 'sunflower': {
+        const h = def.prop === 'sunflower' ? 66 : 28;
+        c.strokeStyle = '#557a53'; c.lineWidth = 2.2 * s; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + 6 * s, y - h * s * .6, x, y - h * s); c.stroke();
+        c.fillStyle = '#648654'; c.beginPath(); c.ellipse(x + 7 * s, y - h * s * .45, 10 * s, 4 * s, -.5, 0, 7); c.fill();
+        for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; c.fillStyle = mix(def.accent, '#fff4d6', k % 2 ? .3 : .05); c.beginPath(); c.ellipse(x + Math.cos(a) * 7 * s, y - h * s + Math.sin(a) * 7 * s, 6 * s, 3 * s, a, 0, 7); c.fill(); }
+        c.fillStyle = '#b78443'; c.beginPath(); c.arc(x, y - h * s, 4 * s, 0, 7); c.fill(); break;
+      }
+      case 'mesa': {
+        const stone = c.createLinearGradient(x - 30 * s, 0, x + 30 * s, 0); stone.addColorStop(0, '#785139'); stone.addColorStop(1, dark); c.fillStyle = stone;
+        c.beginPath(); c.moveTo(x - 38 * s, y); c.lineTo(x - 24 * s, y - 42 * s); c.lineTo(x + 25 * s, y - 42 * s); c.lineTo(x + 40 * s, y); c.fill();
+        c.strokeStyle = 'rgba(255,200,145,.18)'; for (let k = 1; k <= 3; k++) { c.beginPath(); c.moveTo(x - 26 * s, y - k * 10 * s); c.lineTo(x + 26 * s, y - k * 10 * s); c.stroke(); } break;
+      }
+      case 'dune': {
+        c.fillStyle = mix(def.hills[1], '#18303a', .5); c.beginPath(); c.ellipse(x, y, 55 * s, 18 * s, -.08, Math.PI, 0); c.fill();
+        c.strokeStyle = rgba(def.accent, .2); c.beginPath(); c.ellipse(x - 10 * s, y, 43 * s, 13 * s, -.08, Math.PI + .2, Math.PI * 1.8); c.stroke(); break;
+      }
+      case 'reeds':
+        c.strokeStyle = '#857851'; for (let k = -2; k <= 2; k++) { c.beginPath(); c.moveTo(x + k * 5 * s, y); c.quadraticCurveTo(x + k * 7 * s, y - 25 * s, x + k * 10 * s, y - (40 + k * k * 5) * s); c.stroke(); c.fillStyle = '#9b693b'; c.beginPath(); c.ellipse(x + k * 10 * s, y - (40 + k * k * 5) * s, 2.5 * s, 8 * s, .15, 0, 7); c.fill(); } break;
+      case 'bottles': {
+        const glass = c.createLinearGradient(x - 6 * s, 0, x + 6 * s, 0); glass.addColorStop(0, rgba(def.accent, .15)); glass.addColorStop(.3, rgba(def.accent, .6)); glass.addColorStop(1, rgba(def.accent, .15)); c.fillStyle = glass;
+        c.beginPath(); c.roundRect(x - 7 * s, y - 26 * s, 14 * s, 26 * s, 4 * s); c.fill(); c.fillRect(x - 3 * s, y - 37 * s, 6 * s, 14 * s); c.strokeStyle = rgba('#ecffff', .5); c.beginPath(); c.moveTo(x - 3 * s, y - 21 * s); c.lineTo(x - 3 * s, y - 7 * s); c.stroke(); break;
+      }
+      case 'arches':
+        c.strokeStyle = mix(def.hills[1], '#a1a5b7', .2); c.lineWidth = 9 * s; c.beginPath(); c.arc(x, y, 30 * s, Math.PI, 0); c.stroke(); artGlow(c, x, y - 12 * s, 24 * s, '#b6b1fc', .2); break;
+      case 'lanterns': drawLantern(c, x, y - 40 * s, 8 * s); break;
+    }
+    if (i % 5 === 0 && def.prop !== 'lanterns') drawLantern(c, x + 25 * s, y - 34 * s, 6 * s);
+    // Occasional dew and fireflies remain fixed to the seeded world.
+    if (i % 3 === 0) { const fx = x + 18 * s, fy = y - 45 * s - r() * 35 * s; artGlow(c, fx, fy, 12 * s, '#ffc861', .17); c.fillStyle = '#ffe8a6'; c.beginPath(); c.arc(fx, fy, 1.2 * s, 0, 7); c.fill(); }
+  }
+  c.restore();
+}
+
+/** @param {HTMLCanvasElement} cv
+ * @param {any} world
+ * @param {any} d
+ * @param {{card?:boolean,eyebrow?:string,title?:string,foot?:string}} opts */
+function paintDay(cv, world, d, opts = {}){
+  const W = cv.width, H = cv.height, c = cv.getContext('2d'); if (!c) return;
+  const def = biomeAt(world, (d.startPos + d.endPos) / 2).def; const r = rng('paint|' + world.inst + '|' + d.date);
+  const s = series(d); const mx = Math.max(1, ...s); const k = W / 960;
+  drawNightSky(c, W, H, def, r);
+  // The moon stays over the busiest half-hour of this wheel day.
+  const peak = s.indexOf(Math.max(...s)); const mxp = clamp((peak + .5) / 48, .12, .88) * W, myp = H * (opts.card ? .34 : .2);
+  drawMoon(c, mxp, myp, H * .085, world.inst + '|' + d.date);
+  // the aurora: every half-hour on the wheel lights a curtain, brighter the harder it ran
+  c.save(); c.globalCompositeOperation = 'lighter';
+  const sm = smooth(s, 1);
+  for (let i = 0; i < 48; i++) { const v = sm[i] / mx; if (v <= 0.02) continue;
+    const x = i / 48 * W, w = W / 48 * 1.6; const top = H * (0.08 + (1 - v) * 0.32) + Math.sin(i * 0.7 + r() * 2) * H * 0.03; const bot = H * 0.62;
+    const ag = c.createLinearGradient(0, top, 0, bot); ag.addColorStop(0, rgba(def.accent, 0)); ag.addColorStop(0.35, rgba(def.accent, 0.32 * v)); ag.addColorStop(0.8, rgba('#7cf2c5', 0.18 * v)); ag.addColorStop(1, rgba('#7cf2c5', 0));
+    c.fillStyle = ag; c.fillRect(x - w * 0.3, top, w, bot - top);
+    c.strokeStyle = rgba('#ffffff', 0.12 * v); c.lineWidth = 1.2 * k; for (let j = 0; j < 3; j++) { const xx = x + r() * w; c.beginPath(); c.moveTo(xx, top + r() * 20 * k); c.lineTo(xx + (r() - 0.5) * 8 * k, bot); c.stroke(); } }
+  c.restore();
+  // far hills shaped by the day's running, then haze
+  const ridge = (vals, base, amp, col, jitter) => { const pts = []; c.fillStyle = col; c.beginPath(); c.moveTo(0, H);
+    for (let i = 0; i <= 48; i++) { const v = vals[Math.min(i, 47)] / mx; pts.push(base - v * amp - (r() - .5) * jitter); }
+    const fill = c.createLinearGradient(0, base - amp, 0, H); fill.addColorStop(0, col); fill.addColorStop(1, mix(col, '#0a1925', .6)); c.fillStyle = fill;
+    c.lineTo(0, pts[0]);
+    for (let i = 1; i <= 48; i++) { const x = i / 48 * W; c.quadraticCurveTo((i - .5) / 48 * W, pts[i - 1], x, (pts[i - 1] + pts[i]) / 2); }
+    c.lineTo(W, H); c.closePath(); c.save(); c.globalAlpha = .66; c.fill(); c.restore(); return pts; };
+  ridge(smooth(s, 4), H * 0.6, H * 0.26, mix(def.hills[0], def.sky[1], 0.35), H * 0.03);
+  const hz = c.createLinearGradient(0, H * 0.45, 0, H * 0.75); hz.addColorStop(0, rgba(def.sky[1], 0)); hz.addColorStop(1, rgba(def.sky[1], 0.35)); c.fillStyle = hz; c.fillRect(0, H * 0.45, W, H * 0.3);
+  ridge(smooth(s, 2), H * 0.7, H * 0.16, def.hills[0], H * 0.02);
+  // landmarks reached today stand on the near ridge
+  const lms = world.landmarks.filter(x => x.day === d);
+  for (const l of lms) { const x = clamp((l.atMs - d.startMs) / DAY, 0.04, 0.96) * W; drawLandmark(c, lmKind(l.name), x, H * 0.8, H * 0.2, mix(def.hills[1], '#05070c', 0.55)); }
+  ridge(smooth(s, 1).map(v => v * 0.5), H * 0.82, H * 0.08, def.hills[1], H * 0.015);
+  drawProps(c, def, W, H, r, H * 0.86, k);
+  // the day's climb: a glowing path that rises with the distance run, measured against a 15 km day
+  { let acc = 0; const tot = Math.max(1, s.reduce((a, v) => a + v, 0)); const rise = clamp(d.distMm / 15e6, 0.08, 1) * H * 0.3;
+    const stop = d.isToday ? clamp(Math.ceil((world.now - d.startMs) / HALF), 1, 48) : 48;
+    c.strokeStyle = rgba(def.accent, 0.9); c.lineWidth = 3.5 * k; c.shadowColor = rgba(def.accent, 0.9); c.shadowBlur = 14 * k; c.beginPath();
+    for (let i = 0; i <= stop; i++) { const x = i / 48 * W; const y = H * 0.86 - rise * (acc / tot); if (i === 0) c.moveTo(x, y); else c.lineTo(x, y); if (i < 48) acc += s[i]; }
+    c.stroke(); c.shadowBlur = 0; }
+  drawTrailGround(c, W, H, world.inst + '|' + d.date);
+  // the runner at the day's last stride
+  const f = dayFacts(d); const lastT = d.isToday ? Math.min(world.now, d.endMs) : (f.last || d.startMs + DAY / 2);
+  drawHamster(c, clamp((lastT - d.startMs) / DAY, 0.07, 0.93) * W, H * 0.935, H * 0.115, 0);
+  finishPainting(c, W, H);
+  if (opts.card) {
+    const bar = c.createLinearGradient(0, 0, 0, H * 0.3); bar.addColorStop(0, 'rgba(8,11,18,0.9)'); bar.addColorStop(1, 'rgba(8,11,18,0)'); c.fillStyle = bar; c.fillRect(0, 0, W, H * 0.3);
+    c.fillStyle = '#ffc861'; c.font = `600 ${H * 0.038}px "JetBrains Mono", monospace`; c.fillText(opts.eyebrow, W * 0.04, H * 0.075);
+    c.fillStyle = '#efe9dc'; c.font = `${H * 0.08}px Gloock, Georgia, serif`; c.fillText(opts.title, W * 0.04, H * 0.17);
+    const fb = c.createLinearGradient(0, H * 0.8, 0, H); fb.addColorStop(0, 'rgba(8,11,18,0)'); fb.addColorStop(1, 'rgba(8,11,18,0.92)'); c.fillStyle = fb; c.fillRect(0, H * 0.8, W, H * 0.2);
+    c.fillStyle = '#efe9dc'; c.font = `600 ${H * 0.036}px "Instrument Sans", sans-serif`; c.fillText(opts.foot, W * 0.04, H * 0.955);
+    c.textAlign = 'right'; c.fillStyle = '#ffc861'; c.fillText('Wheelbound · Squeekchain', W * 0.96, H * 0.955); c.textAlign = 'left';
+  }
+}
+
+// Squeektoshi: round golden fur, cream belly, pink ears, a face turned toward the trail.
+/** @param {CanvasRenderingContext2D} c */
+function drawHamster(c, x, baseY, s, phase){
+  const bob = Math.sin(phase) * s * .055, stride = Math.sin(phase * 2) * s * .18;
+  c.save(); c.translate(x, baseY - s * .9 + bob);
+  const oval = (x, y, rx, ry, color, angle = 0) => { c.fillStyle = color; c.beginPath(); c.ellipse(x * s, y * s, rx * s, ry * s, angle, 0, 7); c.fill(); };
+  oval(0, .91 - bob / s, 1.02, .12, 'rgba(0,0,0,.32)');
+  // The back foot and little tail peek out behind the round silhouette.
+  oval(-.89, .3, .13, .11, '#d39b83');
+  oval(-.42 + stride / s, .81, .24, .12, '#d98d82', -.3);
+  oval(.4 - stride / s, .82, .25, .13, '#eead98', -.35);
+  const fur = c.createRadialGradient(-s * .35, -s * .5, 0, s * .05, s * .05, s * 1.15);
+  fur.addColorStop(0, '#ffe099'); fur.addColorStop(.4, '#f7c361'); fur.addColorStop(.75, '#d9933d'); fur.addColorStop(1, '#9c5a28');
+  oval(-.12, -.02, .91, .84, fur, -.08);
+  // Rounded ears have a golden rim, a shaded pink cup, and a small cream edge.
+  oval(-.42, -.74, .27, .29, '#edbd6b', -.3); oval(-.41, -.74, .185, .21, '#dd8d91', -.3); oval(-.43, -.8, .12, .1, '#efb3ab', -.3);
+  oval(.43, -.79, .23, .25, '#f7ce83', .2); oval(.43, -.8, .15, .175, '#e69a9b', .2);
+  const face = c.createRadialGradient(s * .3, -s * .4, 0, s * .3, -s * .15, s * .75); face.addColorStop(0, '#ffe4a3'); face.addColorStop(1, '#e5a545');
+  oval(.35, -.23, .64, .6, face, -.05);
+  const cream = c.createRadialGradient(s * .13, s * .2, 0, s * .13, s * .2, s * .7); cream.addColorStop(0, '#fff5dc'); cream.addColorStop(1, '#ddc79b');
+  oval(.1, .36, .59, .43, cream, -.18);
+  oval(.49, .03, .36, .3, '#fff1d1'); oval(.78, -.01, .27, .23, '#fff1d1');
+  // Tiny catching lights make the eyes read even when the canvas is phone-sized.
+  oval(.29, -.29, .115, .135, '#553721'); oval(.31, -.29, .09, .112, '#171a1c'); oval(.34, -.34, .034, .038, '#fff9e9'); oval(.28, -.25, .016, .018, '#bc9c69');
+  oval(.76, -.3, .085, .11, '#553721'); oval(.77, -.3, .065, .09, '#171a1c'); oval(.79, -.34, .024, .028, '#fff9e9');
+  oval(.42, .025, .12, .065, 'rgba(239,154,137,.36)');
+  oval(.94, -.075, .083, .06, '#d9868f'); oval(.94, -.095, .038, .018, '#fbc2b8');
+  c.strokeStyle = '#79563a'; c.lineWidth = s * .018; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(s * .92, -s * .025); c.quadraticCurveTo(s * .89, s * .1, s * .8, s * .08); c.quadraticCurveTo(s * .75, s * .16, s * .69, s * .09); c.stroke();
+  oval(.44 + stride / s * .25, .4, .2, .14, '#edb46b', -.35); oval(.57 + stride / s * .25, .39, .095, .08, '#efb7a1', -.35);
+  c.strokeStyle = 'rgba(255,243,210,.7)'; c.lineWidth = Math.max(.7, s * .011);
+  for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(s * .9, s * .02); c.quadraticCurveTo(s * 1.14, s * (-.04 + i * .08), s * 1.32, s * (-.11 + i * .12)); c.stroke(); }
+  // Seeded short fur strokes and a warm rim, never frame-random noise.
+  const r = rng('squeektoshi|fur');
+  for (let i = 0; i < 65; i++) {
+    const a = 2.8 + r() * 3.3, px = -.12 + Math.cos(a) * .87, py = -.02 + Math.sin(a) * .79;
+    c.strokeStyle = rgba('#ffe9af', .16 + r() * .3); c.lineWidth = Math.max(.65, s * .008); c.beginPath(); c.moveTo(px * s, py * s); c.lineTo((px + Math.cos(a) * .065) * s, (py + Math.sin(a) * .065) * s); c.stroke();
+  }
+  c.strokeStyle = 'rgba(255,235,167,.55)'; c.lineWidth = s * .017; c.beginPath(); c.ellipse(-s * .12, -s * .02, s * .9, s * .83, -.08, 3.3, 4.25); c.stroke();
+  c.restore();
+}
+
+/* ---------- the live scene ---------- */
+let world = buildWorld(), sceneT = 0, lastFrame = performance.now();
+const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+function running(){ const m = S.status?.measurement; if (!m || m.freshness === 'stale') return 0; return Math.max(0, num(m.rpmMilli) / 1000 || 0); }
+function drawScene(ts){
+  if (document.body.classList.contains('overlay') || document.hidden) { requestAnimationFrame(drawScene); return; }
+  try {
+    const cv = $('scene'); const c = cv.getContext('2d'); if (!c) return;
+    const W = cv.width, H = cv.height, dt = Math.min(.1, (ts - lastFrame) / 1000); lastFrame = ts;
+    const quiet = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : reduce;
+    const rpm = running(); if (!quiet) sceneT += dt * (.12 + rpm / 40);
+    const bz = biomeAt(world, world.posMm), def = bz.def, r = rng('scene|' + world.inst + '|' + bz.index);
+    drawNightSky(c, W, H, def, r);
+    drawMoon(c, W * .77, H * .22, H * .09, 'scene|' + world.inst + '|' + bz.index);
+    // The wheel still lights the aurora; its movement follows the same scene clock.
+    if (rpm > 0) {
+      c.save(); c.globalCompositeOperation = 'screen';
+      for (let i = 0; i < 18; i++) {
+        const x = W * i / 18, wave = .5 + .5 * Math.sin(i * .65 + sceneT * 2), top = H * (.12 + wave * .08);
+        const g = c.createLinearGradient(0, top, 0, H * .6); g.addColorStop(0, rgba(def.accent, 0)); g.addColorStop(.35, rgba('#7bd389', .08 * wave)); g.addColorStop(1, rgba(def.accent, 0));
+        c.fillStyle = g; c.fillRect(x, top, W / 12, H * .6 - top);
+      }
+      c.restore();
+    }
+    // Light washes integrate moving, seeded hills with the painted scenery.
+    c.save(); c.globalAlpha = .3;
+    drawHill(c, W, H, H * .65, H * .2, mix(def.hills[0], '#3a5e70', .7), 'far|' + def.name, sceneT * W * .015, true);
+    c.restore();
+    const next = world.landmarks.find(l => !l.passed);
+    if (next) {
+      const left = clamp((next.mm - world.posMm) / LM_MM, 0, 1);
+      drawLandmark(c, lmKind(next.name), W * .68, H * .72, H * (.13 + .17 * (1 - left)), mix(def.hills[0], '#172c36', .7));
+    }
+    c.save(); c.globalAlpha = .28;
+    drawHill(c, W, H, H * .82, H * .1, mix(def.hills[0], '#122b32', .6), 'mid|' + def.name, sceneT * W * .05, true);
+    c.restore();
+    // The foreground retains its painted texture beneath a dim trail and new botanical details.
+    c.save(); c.globalAlpha = .55; drawTrailGround(c, W, H, def.name); c.restore();
+    c.save(); c.translate(-((sceneT * W * .09) % (W / 15)), 0);
+    drawProps(c, def, W + W / 15, H, rng('props|' + def.name), H * .9, W / 1600); c.restore();
+    drawLantern(c, W * .31, H * .66, H * .028);
+    // The next landmark's sign remains a distance from the actual wheel, never decorative data.
+    if (next) {
+      const sx = W * .86, sy = H * .88;
+      c.fillStyle = '#69543a'; c.fillRect(sx - 4, sy - H * .23, 8, H * .23);
+      const wood = c.createLinearGradient(0, sy - H * .27, 0, sy - H * .19); wood.addColorStop(0, '#ead6a3'); wood.addColorStop(1, '#b89f6c');
+      c.fillStyle = wood; c.beginPath(); c.moveTo(sx - W * .055, sy - H * .28); c.lineTo(sx + W * .05, sy - H * .28); c.lineTo(sx + W * .065, sy - H * .24); c.lineTo(sx + W * .05, sy - H * .2); c.lineTo(sx - W * .055, sy - H * .2); c.closePath(); c.fill();
+      c.fillStyle = '#24312c'; c.font = `600 ${H * .033}px "Instrument Sans", sans-serif`; c.textAlign = 'center'; c.fillText(fmtKm(next.mm - world.posMm), sx, sy - H * .229); c.textAlign = 'left';
+    }
+    artGlow(c, W * .49, H * .83, H * .25, '#ffc861', .12);
+    drawHamster(c, W * .49, H * .89, H * .17, rpm > 0 && !quiet ? sceneT * 40 : 0);
+    if (rpm > 0 && !quiet) {
+      c.strokeStyle = 'rgba(255,218,157,.45)'; c.lineWidth = 2.5;
+      for (let i = 0; i < 4; i++) { const x = W * .34 - i * 11, y = H * (.72 + i * .035); c.beginPath(); c.moveTo(x - 18, y); c.lineTo(x + 18, y - 2); c.stroke(); }
+    }
+    finishPainting(c, W, H);
+  } catch (e) { console.error('scene', e); }
+  requestAnimationFrame(drawScene);
+}
+
+/* ---------- the Raid Table: a daily tactic game on top of the journey ---------- */
+// Tuned on the real wheel's first week: every card averages about ×1.3, and which one wins depends on how the night goes.
+const CARDS = [
+  { id:'steady', emoji:'🛡️', name:'Steady Pace', rule:'×1.3 on every metre run today.', hint:'Safe on any day.', score: x => x.dist * 1.3 },
+  { id:'owl', emoji:'🦉', name:'Night Owl', rule:'×1.6 on distance run 22:00–02:00 UTC.', hint:'The deep-night session.', score: x => x.dist + 0.6 * x.night },
+  { id:'early', emoji:'🐦', name:'Early Bird', rule:'×3.5 on distance run 04:00–09:00 UTC.', hint:'The last laps before the day.', score: x => x.dist + 2.5 * x.dawn },
+  { id:'marathon', emoji:'🛤️', name:'Marathon', rule:'×1.7 on the longest unbroken run.', hint:'Rewards one long session.', score: x => x.dist + 0.7 * x.longest },
+  { id:'sprint', emoji:'⚡', name:'Sprint', rule:'×3.5 on the fiercest half-hour.', hint:'One burst is enough.', score: x => x.dist + 2.5 * x.peak },
+  { id:'wind', emoji:'🌬️', name:'Second Wind', rule:'×3 on everything run after the longest pause between runs.', hint:'Bet on a comeback.', score: x => x.dist + 2 * x.afterNap },
+  { id:'big', emoji:'⛰️', name:'Big Day', rule:'×1.7 if today goes farther than yesterday, ×0.8 if not.', hint:'Bet on more.', score: x => !Number.isFinite(x.prev) ? x.dist : x.dist > x.prev ? x.dist * 1.7 : x.dist * 0.8, pending: x => !Number.isFinite(x.prev) || (x.open && x.dist <= x.prev) },
+  { id:'lazy', emoji:'💤', name:'Lazy Day', rule:'×1.7 if today stays shorter than yesterday, ×0.8 if not.', hint:'Bet on a nap.', score: x => !Number.isFinite(x.prev) ? x.dist : x.dist < x.prev ? x.dist * 1.7 : x.dist * 0.8, pending: x => !Number.isFinite(x.prev) || (x.open && x.dist < x.prev) },
+];
+const NO_CARD = 0.5;      // a day without a card deals half
+const TARGET = 1.4;       // the raid is won at the boss's health ×1.4
+const CARD = Object.fromEntries(CARDS.map(c => [c.id, c]));
+const CARD_ICONS = {
+  steady:'<path d="M24 6l14 5v11c0 9-6 16-14 20C16 38 10 31 10 22V11z"/>',
+  owl:'<circle cx="17" cy="22" r="7"/><circle cx="31" cy="22" r="7"/><path d="M10 14l7 3M38 14l-7 3M21 32l3 4 3-4"/>',
+  early:'<circle cx="24" cy="26" r="8"/><path d="M24 8v6M24 38v4M8 26h6M34 26h6M12 14l4 4M36 14l-4 4"/>',
+  marathon:'<path d="M14 42c4-10 16-10 16-20S22 10 26 6M22 42c4-10 16-10 16-20"/>',
+  sprint:'<path d="M27 6L13 27h10l-3 15 15-22H25z"/>',
+  wind:'<path d="M8 18h22a5 5 0 1 0-5-5M8 26h28a5 5 0 1 1-5 5M8 34h14"/>',
+  big:'<path d="M6 40l12-20 8 10 6-8 10 18z"/>',
+  lazy:'<path d="M12 14h10l-10 12h10M28 24h8l-8 10h8"/>',
+};
+const RKEY = 'wheelbound.raid.v1';
+const raidLoad = () => { let v = null; try { v = JSON.parse(localStorage.getItem(RKEY) || 'null'); } catch {}
+  if (!v || typeof v !== 'object' || !v.picks || typeof v.picks !== 'object') v = { picks: {} };
+  if (!v.wallets || typeof v.wallets !== 'object') v.wallets = {}; return v; };
+const raid = raidLoad();
+const raidSave = () => { try { localStorage.setItem(RKEY, JSON.stringify(raid)); } catch {} };
+// picks made in another tab: re-read before every write, and follow the other tab's writes
+function raidSync(){ const v = raidLoad(); raid.inst = v.inst; raid.picks = v.picks; raid.wallets = v.wallets; }
+// guests keep their picks on this device; a connected wallet has its own, signed picks
+function myPicks(){ const k = Wal.addr ? Wal.addr.toLowerCase() : null; if (!k) return raid.picks; if (!raid.wallets[k] || typeof raid.wallets[k] !== 'object') raid.wallets[k] = {}; return raid.wallets[k]; }
+window.addEventListener('storage', e => { if (e.key === RKEY) { raidSync(); render(); } });
+function raidInst(){ if (S.inst && raid.inst && raid.inst !== S.inst) { raid.picks = {}; raid.wallets = {}; } if (S.inst && raid.inst !== S.inst) { raid.inst = S.inst; raidSave(); } }
+const dateOf = ms => new Date(ms - S.offsetMs).toISOString().slice(0, 10);
+const handFor = date => { const r = rng('hand|' + (S.inst || 'squeekchain') + '|' + date); const ids = CARDS.map(c => c.id);
+  for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; } return ids.slice(0, 3); };
+// The day's running as pieces in mm: settled rounds (10 minutes) once the day is read, otherwise the stats half-hours,
+// plus today's live distance that has not settled yet, spread over the time since the last settled round.
+// A batch settlement's work is spread evenly over its rounds.
+function segments(d){
+  const out = []; const mmw = S.mmw; const rd = S.d * 1000;
+  if (d.complete) {
+    const rs = d.rounds;
+    for (let i = 0; i < rs.length; i++) {
+      if (rs[i].batched) { let j = i; while (j + 1 < rs.length && rs[j + 1].batched && rs[j].w === 0) j++; const n = j - i + 1, mm = rs.slice(i, j + 1).reduce((a, x) => a + x.w, 0) * mmw / n;
+        for (let k = i; k <= j; k++) out.push({ t0: rs[k].end - rd, t1: rs[k].end, mm }); i = j; }
+      else out.push({ t0: rs[i].end - rd, t1: rs[i].end, mm: rs[i].w * mmw });
+    }
+  } else for (const b of d.buckets) out.push({ t0: b.t, t1: b.t + HALF, mm: b.work * mmw });
+  if (d.liveExtraMm > 0) {
+    const to = clamp(d.liveAt || srvNow(), d.startMs + 1, d.endMs); const act = out.filter(x => x.mm > 0 && x.t1 <= to); const last = d.complete ? (out.length ? out[out.length - 1].t1 : d.startMs) : act.length ? act[act.length - 1].t1 : Math.max(d.startMs, to - HALF);
+    const from = clamp(Math.min(last, to - 1), d.startMs, to - 1); const n = Math.max(1, Math.ceil((to - from) / rd));
+    for (let k = 0; k < n; k++) out.push({ t0: from + (to - from) * k / n, t1: from + (to - from) * (k + 1) / n, mm: d.liveExtraMm / n });
+  }
+  return out;
+}
+// The parts of a day the cards care about, in mm.
+function dayParts(d, prev){
+  const segs = segments(d);
+  const out = { dist: Number.isFinite(d.distMm) ? d.distMm : 0, night: 0, dawn: 0, longest: 0, peak: 0, afterNap: 0, open: !!d.isToday || !d.complete,
+    prev: prev ? prev.distMm : d.index === 0 ? 0 : NaN };
+  const half = new Array(48).fill(0);
+  for (const x of segs) { const h = new Date((x.t0 + x.t1) / 2).getUTCHours(); if (h >= 22 || h < 2) out.night += x.mm; if (h >= 4 && h < 9) out.dawn += x.mm;
+    half[clamp(Math.floor(((x.t0 + x.t1) / 2 - d.startMs) / HALF), 0, 47)] += x.mm; }
+  out.peak = Math.max(0, ...half);
+  const runs = []; let cur = null;
+  for (const x of segs) { if (x.mm <= 0) { cur = null; continue; } if (cur && Math.abs(cur.t1 - x.t0) < 1000) { cur.t1 = x.t1; cur.mm += x.mm; } else { cur = { t0: x.t0, t1: x.t1, mm: x.mm }; runs.push(cur); } }
+  out.longest = runs.reduce((a, r) => Math.max(a, r.mm), 0);
+  let gap = -1, at = -1; for (let i = 1; i < runs.length; i++) { const g = runs[i].t0 - runs[i - 1].t1; if (g > gap) { gap = g; at = i; } }
+  if (at > 0) out.afterNap = runs.slice(at).reduce((a, r) => a + r.mm, 0);
+  return out;
+}
+const stars = (score, dist) => dist <= 0 ? (score > 0 ? 3 : 0) : score / dist >= 1.7 ? 3 : score / dist >= 1.4 ? 2 : score / dist >= 1.15 ? 1 : 0;
+// Can a card still be picked for this wheel day? Before it starts, or while the wheel has not turned yet. Server time only.
+function pickOpen(date){
+  if (!clk.length) return false;
+  const today = world.days[world.days.length - 1]; const now = srvNow();
+  const start = Date.parse(date + 'T00:00:00Z') + S.offsetMs;
+  if (now < start) return true;
+  if (!today || today.date !== date || !today.isToday) return false;
+  return !(today.work > 0) && !(today.distMm > 0) && running() <= 0 && Date.now() - S.statusAt < 30000 && S.status?.measurement?.freshness !== 'stale';
+}
+function pickFor(d){
+  const p = myPicks()[d.date]; if (!p || !CARD[p.card]) return null;
+  if (p.dist > 0) return { ...p, late: true };                                   // the day's distance was already counting
+  const first = (d.rounds || []).find(x => x.w > 0);                            // the first round that settled with running
+  if (Number.isFinite(p.at) && p.at >= d.startMs && first && p.at >= first.end) return { ...p, late: true };
+  return p;
+}
+function scoreDay(d){
+  const prev = d.index > 0 ? world.days[d.index - 1] : null;
+  const x = dayParts(d, prev); const p = pickFor(d); const hand = handFor(d.date);
+  const cardId = p && !p.late ? p.card : null;
+  const score = cardId ? CARD[cardId].score(x) : x.dist * NO_CARD;
+  const best = hand.map(id => ({ id, v: CARD[id].score(x) })).sort((a, b) => b.v - a.v)[0];
+  const pending = !!cardId && (x.open || (CARD[cardId].pending ? CARD[cardId].pending(x) : false));
+  return { d, x, hand, cardId, late: !!(p && p.late), score, best, pending, stars: cardId && !pending ? stars(score, x.dist) : 0 };
+}
+/* ---------- Sepolia: the wallet, and reading the chain itself ---------- */
+const SEPOLIA = '0xaa36a7';
+const RPCS = ['https://ethereum-sepolia-rpc.publicnode.com', 'https://1rpc.io/sepolia'];
+const short = a => a.slice(0, 6) + '…' + a.slice(-4);
+const scan = (kind, v) => `https://sepolia.etherscan.io/${kind}/${v}`;
+let rpcId = 1;
+async function rpc(method, params){
+  let last = null;
+  for (const u of RPCS) {
+    const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 10000);
+    try { const r = await fetch(u, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: rpcId++, method, params }), signal: ctl.signal });
+      const j = await r.json(); if (j && typeof j === 'object' && 'result' in j) return j.result; last = new Error((j && j.error && j.error.message) || 'rpc'); }
+    catch (e) { last = e; } finally { clearTimeout(to); }
+  }
+  throw last || new Error('rpc');
+}
+const word = (data, i) => { const w = typeof data === 'string' ? data.slice(2 + 64 * i, 2 + 64 * (i + 1)) : ''; return /^[0-9a-fA-F]{64}$/.test(w) ? Number(BigInt('0x' + w)) : NaN; };
+// A settled round is checked on Sepolia itself. Each settlement's own log on SqueekCore must name the same rounds, the same
+// number of active rounds and the same running total of work as the API; a round's work is then the difference between
+// its settlement's total and the previous settlement's total, both read from Sepolia. Only then does the row get its ✓.
+const verified = new Map();   // tx -> { state: 'wait' | 'ok' | 'bad' | 'err', cum, block, at }
+let strikeWant = [];          // settlements the round list needs checked, newest first
+let verifying = false;
+async function verifyRecent(){
+  if (verifying || !isAddr(S.ids.core) || document.body.classList.contains('overlay')) return; verifying = true;
+  try {
+    const keep = new Set([...S.tx.values()].map(t => t.tx)); for (const k of verified.keys()) if (!keep.has(k)) verified.delete(k);
+    // the rounds shown in the list and the settlement before each of them; the newest settlements otherwise
+    const want = strikeWant.length ? strikeWant : [...S.tx.keys()].sort((x, y) => y - x).slice(0, 8);
+    const due = [...new Set(want)].map(b => [b, S.tx.get(b)]).filter(([, t]) => { if (!t) return false; const v = verified.get(t.tx); return !v || (v.state === 'err' && Date.now() - v.at > 60000); }).slice(0, 8);
+    for (const [b, t] of due) {
+      verified.set(t.tx, { state: 'wait', at: Date.now() });
+      try {
+        const rc = await rpc('eth_getTransactionReceipt', [t.tx]);
+        if (!rc || !Array.isArray(rc.logs)) { verified.set(t.tx, { state: 'err', at: Date.now() }); continue; }   // this node has not seen it yet
+        const core = S.ids.core.toLowerCase();
+        const l = rc.logs.find(x => x && String(x.address).toLowerCase() === core && Array.isArray(x.topics) && x.topics.length === 4 && /^0x[0-9a-fA-F]{1,64}$/.test(x.topics[3]) && Number(BigInt(x.topics[3])) === b);
+        const cum = l ? word(l.data, 3) : NaN;
+        const ok = rc.status === '0x1' && !!l && word(l.data, 1) === t.a && word(l.data, 2) === t.act && Number.isFinite(t.cum) && cum === t.cum;
+        verified.set(t.tx, { state: ok ? 'ok' : 'bad', cum, block: parseInt(rc.blockNumber, 16), at: Date.now() });
+      } catch { verified.set(t.tx, { state: 'err', at: Date.now() }); }
+    }
+  } finally { verifying = false; }
+}
+// the check state of one settled round, as shown in its row
+function roundCheck(b){
+  const t = S.tx.get(b); if (!t) return null; if (!isAddr(S.ids.core) || !Number.isFinite(t.cum) || !Number.isFinite(t.w)) return { t, state: 'err' };
+  const v = verified.get(t.tx); if (!v || v.state === 'wait') return { t, state: 'wait' }; if (v.state !== 'ok') return { t, state: v.state };
+  let prev = 0; if (t.a > 0) { const pt = S.tx.get(t.a); const pv = pt && verified.get(pt.tx); if (!pt) return { t, state: 'err' }; if (!pv || pv.state === 'wait') return { t, state: 'wait' }; if (pv.state !== 'ok') return { t, state: pv.state }; prev = pv.cum; }
+  return { t, state: v.cum - prev === t.w ? 'ok' : 'bad', block: v.block };
+}
+// Wallets: any EIP-6963 wallet (MetaMask, Rabby, …), or the injected one. Nothing here ever sends a transaction.
+const WKEY = 'wheelbound.wallet.v1';
+const Wal = { list: [], prov: null, info: null, addr: null, chain: null, sqk: null, squeeks: null, choosing: false, busy: false, note: '' };
+const bound = new WeakSet();
+window.addEventListener('eip6963:announceProvider', e => { const d = e.detail;
+  if (d && d.provider && typeof d.provider.request === 'function' && d.info && typeof d.info.name === 'string' && !Wal.list.some(p => p.info.uuid === d.info.uuid)) { Wal.list.push(d); renderWallet(); setTimeout(quietReconnect, 0); } });
+try { window.dispatchEvent(new Event('eip6963:requestProvider')); } catch {}
+// Every wallet the browser offers: the ones that announce themselves (EIP-6963: MetaMask, Rabby, OKX, Coinbase, Trust,
+// Bitget, Phantom, Brave, …) plus wallets that only inject an older global, without listing one twice.
+const KNOWN = [['isRabby', 'Rabby', 'io.rabby'], ['isOkxWallet', 'OKX Wallet', 'com.okex.wallet'], ['isOKExWallet', 'OKX Wallet', 'com.okex.wallet'], ['isCoinbaseWallet', 'Coinbase Wallet', 'com.coinbase.wallet'],
+  ['isTrust', 'Trust Wallet', 'com.trustwallet.app'], ['isTrustWallet', 'Trust Wallet', 'com.trustwallet.app'], ['isBitKeep', 'Bitget Wallet', 'com.bitget.web3'], ['isPhantom', 'Phantom', 'app.phantom'],
+  ['isBraveWallet', 'Brave Wallet', 'com.brave.wallet'], ['isTokenPocket', 'TokenPocket', 'pro.tokenpocket'], ['isSafePal', 'SafePal', 'io.safepal'], ['isZerion', 'Zerion', 'io.zerion.wallet'], ['isMetaMask', 'MetaMask', 'io.metamask']];
+function legacyInfo(pr, name, rdns){ if (!name) { const k = KNOWN.find(([f]) => { try { return pr[f] === true; } catch { return false; } }); name = k ? k[1] : 'Browser wallet'; rdns = k ? k[2] : 'injected'; }
+  return { info: { name, rdns, uuid: 'legacy:' + rdns, icon: '' }, provider: pr }; }
+function wallets(){
+  const l = Wal.list.slice(); const ok = pr => { try { return !!pr && typeof pr.request === 'function'; } catch { return false; } };
+  const add = w => { if (!ok(w.provider) || l.some(x => x.provider === w.provider || x.info.rdns === w.info.rdns)) return; l.push(w); };
+  try {
+    add(legacyInfo(window.okxwallet, 'OKX Wallet', 'com.okex.wallet'));
+    add(legacyInfo(window.bitkeep && window.bitkeep.ethereum, 'Bitget Wallet', 'com.bitget.web3'));
+    add(legacyInfo(window.trustwallet, 'Trust Wallet', 'com.trustwallet.app'));
+    add(legacyInfo(window.coinbaseWalletExtension, 'Coinbase Wallet', 'com.coinbase.wallet'));
+    add(legacyInfo(window.phantom && window.phantom.ethereum, 'Phantom', 'app.phantom'));
+    const eth = window.ethereum; if (eth && Array.isArray(eth.providers)) for (const pr of eth.providers) add(legacyInfo(pr));
+    if (eth) add(legacyInfo(eth));
+  } catch {}
+  return l;
+}
+// no wallet here (often a phone): open this page inside a wallet app's own browser
+function appLinks(){ const url = location.href.split('#')[0]; const e = encodeURIComponent;
+  return [['MetaMask', 'https://metamask.app.link/dapp/' + url.replace(/^https?:\/\//, '')], ['OKX Wallet', 'https://web3.okx.com/download?deeplink=' + e('okx://wallet/dapp/url?dappUrl=' + e(url))],
+    ['Trust Wallet', 'https://link.trustwallet.com/open_url?coin_id=60&url=' + e(url)], ['Coinbase Wallet', 'https://go.cb-w.com/dapp?cb_url=' + e(url)]]; }
+const wget = () => { try { const v = JSON.parse(localStorage.getItem(WKEY) || 'null'); return v && typeof v.rdns === 'string' ? v : null; } catch { return null; } };
+const wset = v => { try { v ? localStorage.setItem(WKEY, JSON.stringify(v)) : localStorage.removeItem(WKEY); } catch {} };
+async function useWallet(w, ask){
+  const pr = w.provider;
+  if (!bound.has(pr) && typeof pr.on === 'function') { bound.add(pr);
+    pr.on('accountsChanged', a => { if (Wal.prov !== pr) return; const nx = Array.isArray(a) && isAddr(a[0]) ? a[0] : null; if ((nx || '').toLowerCase() !== (Wal.addr || '').toLowerCase()) { Wal.sqk = null; Wal.squeeks = null; } Wal.addr = nx; if (!Wal.addr) wset(null); loadHoldings(); render(); });
+    pr.on('chainChanged', c => { if (Wal.prov !== pr) return; Wal.chain = typeof c === 'string' ? c.toLowerCase() : null; render(); }); }
+  const accts = await pr.request({ method: ask ? 'eth_requestAccounts' : 'eth_accounts' });
+  if (!Array.isArray(accts) || !isAddr(accts[0])) { if (ask) throw new Error('no account'); return false; }
+  if ((Wal.addr || '').toLowerCase() !== accts[0].toLowerCase()) { Wal.sqk = null; Wal.squeeks = null; }
+  Wal.prov = pr; Wal.info = w.info; Wal.addr = accts[0]; Wal.choosing = false;
+  try { const c = await pr.request({ method: 'eth_chainId' }); Wal.chain = typeof c === 'string' ? c.toLowerCase() : null; } catch { Wal.chain = null; }
+  Wal.noWallet = false; wset({ rdns: w.info.rdns || 'injected' }); loadHoldings(); return true;
+}
+async function connectWallet(w){
+  if (Wal.busy) return; Wal.busy = true; Wal.note = ''; renderWallet();
+  try { await useWallet(w, true); if (Wal.chain !== SEPOLIA) { try { await switchSepolia(); } catch {} } toast(Wal.chain === SEPOLIA ? 'Wallet connected on Sepolia' : 'Wallet connected; switch it to Sepolia'); }
+  catch (e) { Wal.note = e && e.code === 4001 ? 'Connection cancelled in the wallet.' : 'The wallet did not connect.'; }
+  finally { Wal.busy = false; render(); }
+}
+async function switchSepolia(){
+  if (!Wal.prov) return;
+  try { await Wal.prov.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: SEPOLIA }] }); }
+  catch (e) { if (e && (e.code === 4902 || (e.data && e.data.originalError && e.data.originalError.code === 4902)))
+      await Wal.prov.request({ method: 'wallet_addEthereumChain', params: [{ chainId: SEPOLIA, chainName: 'Sepolia', nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: [RPCS[0]], blockExplorerUrls: ['https://sepolia.etherscan.io'] }] });
+    else if (!(e && e.code === 4001)) throw e; }
+  try { const c = await Wal.prov.request({ method: 'eth_chainId' }); Wal.chain = typeof c === 'string' ? c.toLowerCase() : Wal.chain; } catch {}
+}
+function disconnectWallet(){ const pr = Wal.prov; Wal.prov = null; Wal.info = null; Wal.addr = null; Wal.chain = null; Wal.sqk = null; Wal.squeeks = null; wset(null);
+  try { pr && pr.request({ method: 'wallet_revokePermissions', params: [{ eth_accounts: {} }] }).catch(() => {}); } catch {}
+  toast('Wallet disconnected; you play as a guest'); render(); }
+// SQK and Squeek NFTs held on Sepolia, read from the chain (not from the wallet)
+let holdSeq = 0;
+async function loadHoldings(){
+  const addr = Wal.addr, seq = ++holdSeq; if (!addr) return;
+  const data = '0x70a08231' + addr.slice(2).toLowerCase().padStart(64, '0');
+  try { if (isAddr(S.ids.token)) { const [b, d] = await Promise.all([rpc('eth_call', [{ to: S.ids.token, data }, 'latest']), rpc('eth_call', [{ to: S.ids.token, data: '0x313ce567' }, 'latest'])]);
+      const dec = word(d, 0); if (seq === holdSeq && typeof b === 'string' && /^0x[0-9a-fA-F]+$/.test(b) && dec >= 0 && dec <= 36) { const v = BigInt(b === '0x' ? '0x0' : b); Wal.sqk = Number(v / 10n ** BigInt(Math.max(0, dec - 2))) / 100; } }
+    if (isAddr(S.ids.genesis)) { const n = await rpc('eth_call', [{ to: S.ids.genesis, data }, 'latest']); if (seq === holdSeq) { const v = word(n, 0); Wal.squeeks = Number.isFinite(v) ? v : null; } }
+  } catch {}
+  if (seq === holdSeq) renderWallet();
+}
+async function signPick(date, card){
+  const msg = ['Wheelbound · Raid Table pick', `Card: ${CARD[card].name}`, `Wheel day: ${date} (12:00 to 12:00 UTC)`, `Player: ${Wal.addr}`, `Installation: ${S.inst || 'unknown'}`, `Squeekchain time: ${new Date(srvNow()).toISOString().slice(0, 19)}Z`, 'Signing is free: it sends no transaction and costs no gas.'].join('\n');
+  const bytes = typeof TextEncoder === 'function' ? [...new TextEncoder().encode(msg)] : [...unescape(encodeURIComponent(msg))].map(ch => ch.charCodeAt(0));
+  const hex = '0x' + bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+  const sig = await Wal.prov.request({ method: 'personal_sign', params: [hex, Wal.addr] });
+  if (typeof sig !== 'string' || !/^0x[0-9a-fA-F]{130}$/.test(sig)) throw new Error('bad signature');
+  return { msg, sig };
+}
+function renderWallet(){
+  const btns = $('wBtns'), st = $('wState'); if (!btns || !st) return;
+  const list = wallets();
+  const sig = [Wal.addr, Wal.chain, Wal.sqk, Wal.squeeks, Wal.choosing, Wal.noWallet, Wal.busy, Wal.note, Wal.info && Wal.info.name, list.map(w => w.info.uuid).join(',')].join('|');
+  if (btns.dataset.sig === sig) return; btns.dataset.sig = sig; btns.innerHTML = ''; st.innerHTML = '';
+  const btn = (t, f, cls) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn' + (cls ? ' ' + cls : ''); b.textContent = t; b.addEventListener('click', f); btns.appendChild(b); return b; };
+  const span = (t, cls) => { const e = document.createElement('span'); if (cls) e.className = cls; e.textContent = t; st.appendChild(e); return e; };
+  if (!Wal.addr) {
+    if (Wal.choosing && list.length > 1) { for (const w of list) { const b = btn(w.info.name, () => connectWallet(w), 'wpick');
+        if (typeof w.info.icon === 'string' && /^data:image\/(svg\+xml|png|webp|jpeg|gif)[;,]/.test(w.info.icon)) { const im = document.createElement('img'); im.src = w.info.icon; im.alt = ''; im.width = 18; im.height = 18; b.prepend(im); } }
+      btn('Cancel', () => { Wal.choosing = false; renderWallet(); }); span(`${list.length} wallets found. Choose one; it will ask to connect on Sepolia.`); return; }
+    if (Wal.noWallet) { for (const [n, href] of appLinks()) { const a = document.createElement('a'); a.className = 'btn'; a.href = href; a.rel = 'noopener'; a.textContent = 'Open in ' + n; btns.appendChild(a); }
+      btn('Back', () => { Wal.noWallet = false; renderWallet(); });
+      span('No wallet in this browser. On a phone, open Wheelbound inside your wallet app; on a computer, install a wallet extension (MetaMask, Rabby, OKX, Coinbase, Trust, Bitget, …). Or keep playing as a guest.'); return; }
+    const b = btn(Wal.busy ? 'Connecting…' : 'Connect wallet', () => { const l = wallets(); if (!l.length) { Wal.noWallet = true; renderWallet(); return; } if (l.length === 1) connectWallet(l[0]); else { Wal.choosing = true; renderWallet(); } }, 'primary');
+    b.disabled = Wal.busy;
+    span(Wal.note || 'Playing as a guest: picks stay on this device. Connect any EVM wallet on Sepolia to sign each pick (free, no gas, no transaction).');
+    return;
+  }
+  const a = document.createElement('a'); a.className = 'addr'; a.href = scan('address', Wal.addr); a.target = '_blank'; a.rel = 'noopener'; a.textContent = short(Wal.addr); st.appendChild(a);
+  if (Wal.info && Wal.info.name) span(Wal.info.name, 'badge');
+  if (Wal.chain === SEPOLIA) span('Sepolia', 'badge ok'); else { span(Wal.chain ? 'not on Sepolia' : 'network unknown', 'badge warn'); btn('Switch to Sepolia', async () => { try { await switchSepolia(); } catch {} render(); }); }
+  if (Wal.sqk != null) span(Wal.sqk.toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' SQK', 'badge');
+  if (Wal.squeeks > 0) span(`🐹 ${Wal.squeeks} Squeek${Wal.squeeks > 1 ? 's' : ''} · holder`, 'badge ok');
+  span('Picks are signed by this wallet.');
+  btn('Disconnect', disconnectWallet);
+}
+// reconnect quietly to the wallet used last time (no prompt)
+const tried = new Set();
+async function quietReconnect(){ const saved = wget(); if (!saved || Wal.addr || Wal.busy) return;
+  const w = wallets().find(x => (x.info.rdns || 'injected') === saved.rdns) || (saved.rdns === 'injected' ? wallets()[0] : null);
+  if (!w || tried.has(w.info.uuid)) return; tried.add(w.info.uuid);
+  try { await useWallet(w, false); } catch {} if (typeof world !== 'undefined' && world) render(); }
+setTimeout(() => { quietReconnect(); renderWallet(); }, 600);
+// Round by round: the newest settled rounds, each a hit on the boss shaped by that day's card, each linked to Sepolia.
+const ROUND_CARD = { steady: () => 1.3, owl: h => (h >= 22 || h < 2) ? 1.6 : 1, early: h => (h >= 4 && h < 9) ? 3.5 : 1 };
+function renderStrikes(){
+  const box = $('strikes'); if (!box || !Number.isFinite(S.g)) return;
+  const now = srvNow(); const cur = Math.max(1, Math.floor((now / 1000 - S.g) / S.d) + 1);
+  const conf = Date.parse(S.status?.builder?.anchor?.confirmedAt);
+  setText('roundNow', `Round ${fmtInt(cur)} running, ends ${hhmm(roundEnd(cur))} UTC` + (S.settled ? ` · settled through ${fmtInt(S.settled)}` + (Number.isFinite(conf) ? ` at ${hhmm(conf)}` : '') : ''));
+  const rows = [];
+  for (let r = S.settled; r >= 1 && r > S.settled - 288 && rows.length < 8; r--) {
+    const w = S.rounds.get(r); if (w === undefined) continue;
+    if (w === 0) { if (S.batched.has(r)) continue; const last = rows[rows.length - 1]; if (last && last.rest) { last.from = r; continue; } rows.push({ rest: true, from: r, to: r }); continue; }
+    let from = r; if (S.batched.has(r)) while (S.batched.has(from - 1) && S.rounds.get(from - 1) === 0) from--;
+    rows.push({ r, from, w });
+  }
+  const view = rows.map(x => {
+    if (x.rest) return { x, sig: 'rest' + x.from + '-' + x.to };
+    const end = roundEnd(x.r); const d = world.days.find(y => end > y.startMs && end <= y.endMs);
+    const p = d ? pickFor(d) : null; const card = p && !p.late ? p.card : null;
+    const h = new Date(end - 1).getUTCHours(); const f = !card ? NO_CARD : ROUND_CARD[card] ? ROUND_CARD[card](h) : 1;
+    const v = roundCheck(x.r); const t = v ? v.t : null;
+    return { x, card, f, t, v, sig: [x.r, x.w, card, f, t && t.tx, v && v.state].join(':') };
+  });
+  strikeWant = view.filter(v => v.t).flatMap(v => [v.x.r, v.t.a]);
+  const sig = view.map(v => v.sig).join('|'); if (box.dataset.sig === sig) return; box.dataset.sig = sig; box.innerHTML = '';
+  if (!view.length) { const li = document.createElement('li'); li.className = 'rest'; li.textContent = 'Waiting for settled rounds…'; box.appendChild(li); return; }
+  for (const it of view) {
+    const li = document.createElement('li'); const cell = (t, cls) => { const e = document.createElement('span'); if (cls) e.className = cls; e.textContent = t; li.appendChild(e); return e; };
+    if (it.x.rest) { li.className = 'rest'; const n = it.x.to - it.x.from + 1;
+      cell(n > 1 ? `Rounds ${fmtInt(it.x.from)}–${fmtInt(it.x.to)}` : `Round ${fmtInt(it.x.from)}`, 'r'); cell(`${hhmm(roundEnd(it.x.from) - S.d * 1000)}–${hhmm(roundEnd(it.x.to))}`); cell('resting, no hit'); cell(''); box.appendChild(li); continue; }
+    const mm = it.x.w * S.mmw; const n = it.x.r - it.x.from + 1;
+    cell((n > 1 ? `Rounds ${fmtInt(it.x.from)}–${fmtInt(it.x.r)}` : `Round ${fmtInt(it.x.r)}`) + ` · ${hhmm(roundEnd(it.x.from) - S.d * 1000)}–${hhmm(roundEnd(it.x.r))}`, 'r');
+    cell(`${fmtInt(mm / 1000)} m run`);
+    const c = it.card ? CARD[it.card] : null;
+    cell(`hit ${fmtInt(mm * it.f / 1000)} m` + (c ? ` ${c.emoji}` + (it.f !== 1 ? ` ×${it.f}` : ROUND_CARD[it.card] ? '' : ' + day bonus') : ' · no card, half'), 'hit');
+    const tx = document.createElement('span'); tx.className = 'tx';
+    if (it.t) { const a = document.createElement('a'); a.href = scan('tx', it.t.tx); a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Sepolia ↗'; tx.appendChild(a);
+      const b = document.createElement('span'); const st = it.v ? it.v.state : 'wait';
+      b.className = 'badge ' + (st === 'ok' ? 'ok' : st === 'bad' ? 'bad' : 'warn'); b.textContent = st === 'ok' ? `✓ block ${fmtInt(it.v.block)}` : st === 'bad' ? '✗ differs' : st === 'err' ? 'not checked' : 'checking…';
+      if (st === 'bad') b.title = 'The transaction on Sepolia does not match what the API reported for this round.'; tx.appendChild(b); }
+    else { const b = document.createElement('span'); b.className = 'badge'; b.textContent = 'no tx link'; b.title = 'The feed did not give this round a transaction.'; tx.appendChild(b); }
+    li.appendChild(tx); box.appendChild(li);
+  }
+}
+let raidTab = null;
+function renderRaid(){
+  raidInst();
+  const wk = world.weeks[world.weeks.length - 1]; if (!wk) return;
+  const today = world.days[world.days.length - 1];
+  const target = Math.round(wk.hpMm * TARGET);
+  const known = d => d && Number.isFinite(d.distMm);
+  // the week strip
+  const rows = []; for (let i = 0; i < 7; i++) { const ms = wk.ws + i * DAY; const date = dateOf(ms + 1); const d = world.days.find(x => x.date === date); rows.push({ date, d, sc: known(d) ? scoreDay(d) : null }); }
+  const mine = rows.reduce((a, r) => a + (r.sc ? r.sc.score : 0), 0);
+  $('raidMine').style.width = clamp(100 * mine / target, 0, 100).toFixed(1) + '%';
+  const won = mine >= target; const reading = rows.some(r => r.d && !r.sc);
+  const playedNow = rows.some(r => r.sc && r.sc.cardId) || rows.some(r => myPicks()[r.date]);
+  $('raidMineTxt').textContent = `${fmtKm(mine)} of ${fmtKm(target, 0)}` + (reading ? ' · reading…' : won && playedNow ? ' · victory' : '');
+  $('raidAloneTxt').textContent = wk.known ? `${fmtKm(wk.dmgMm)} of ${fmtKm(wk.hpMm, 0)}` + (wk.defeatedAt ? ' · defeated' : '') : 'reading…';
+  $('raidAlone').style.width = (wk.known ? clamp(100 * wk.dmgMm / wk.hpMm, 0, 100) : 0).toFixed(1) + '%';
+  $('raidBoss').textContent = `Week ${wk.w + 1} vs ${wk.name}`;
+  const strip = $('weekStrip'); strip.innerHTML = '';
+  for (const r of rows) {
+    const cell = document.createElement('div'); cell.className = 'wday' + (today && r.date === today.date && today.isToday ? ' now' : '') + (!r.d ? ' future' : '');
+    const p = myPicks()[r.date];
+    const top = document.createElement('span'); top.className = 'k'; top.textContent = dateLabel(r.date);
+    const ic = document.createElement('span'); ic.className = 'ic'; const cid = r.sc ? r.sc.cardId : (p && CARD[p.card] ? p.card : null);
+    ic.innerHTML = cid ? `<svg viewBox="0 0 48 48" aria-hidden="true">${CARD_ICONS[cid]}</svg>` : '<span class="none">—</span>';
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = cid ? CARD[cid].name : (r.sc && r.sc.late ? 'picked too late' : r.d && !r.sc ? 'reading…' : r.d ? 'no card · half' : 'not dealt yet');
+    const st = document.createElement('span'); st.className = 'st'; st.setAttribute('aria-label', (r.sc ? r.sc.stars : 0) + ' stars');
+    st.textContent = r.sc && r.sc.cardId ? (r.sc.pending ? (r.d.isToday ? 'live' : 'pending') : '★'.repeat(r.sc.stars) + '☆'.repeat(3 - r.sc.stars)) : '';
+    const dm = document.createElement('span'); dm.className = 'dm'; dm.textContent = r.sc ? fmtKm(r.sc.score) : '';
+    cell.append(top, ic, nm, st, dm);
+    if (r.sc && !r.sc.x.open && r.sc.best) { const b = document.createElement('span'); b.className = 'best'; b.textContent = (r.sc.best.id === r.sc.cardId ? 'best pick ✓' : 'best: ' + CARD[r.sc.best.id].name); cell.appendChild(b); }
+    strip.appendChild(cell);
+  }
+  // the hand: today while it is still open, and tomorrow
+  const opts = [];
+  if (today && today.isToday && pickOpen(today.date)) opts.push({ date: today.date, label: 'Today' });
+  const tomorrow = dateOf((today ? today.startMs : srvNow()) + DAY + 1); if (pickOpen(tomorrow)) opts.push({ date: tomorrow, label: 'Tomorrow' });
+  if (!opts.find(o => o.date === raidTab)) raidTab = opts[0] ? opts[0].date : null;
+  const tabs = $('handTabs'); tabs.innerHTML = '';
+  for (const o of opts) { const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.setAttribute('aria-pressed', String(o.date === raidTab)); b.textContent = `${o.label} · ${dateLabel(o.date)}`; b.addEventListener('click', () => { raidTab = o.date; renderRaid(); }); tabs.appendChild(b); }
+  const hand = $('hand'); hand.innerHTML = '';
+  if (raidTab) {
+    const start = Date.parse(raidTab + 'T00:00:00Z') + S.offsetMs; const sel = myPicks()[raidTab] && myPicks()[raidTab].card;
+    $('handLock').textContent = srvNow() < start ? `Deal opens at 12:00 UTC · lock: when the wheel first turns that day` : 'Locks the moment the wheel first turns';
+    for (const id of handFor(raidTab)) { const c = CARD[id]; const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(sel === id));
+      b.innerHTML = `<svg viewBox="0 0 48 48" aria-hidden="true">${CARD_ICONS[id]}</svg><b></b><span class="rule"></span><span class="hint"></span>`;
+      b.querySelector('b').textContent = c.name; b.querySelector('.rule').textContent = c.rule; b.querySelector('.hint').textContent = c.hint;
+      b.addEventListener('click', async () => { const date = raidTab; if (!pickOpen(date)) { toast('That day is locked'); renderRaid(); return; }
+        let signed = null;
+        const who = Wal.addr;
+        if (who) { if (Wal.signing) { toast('Finish signing in the wallet first'); return; } Wal.signing = true;
+          try { signed = await signPick(date, id); } catch (e) { toast(e && e.code === 4001 ? 'Not signed, so the pick was not saved' : 'The wallet could not sign the pick'); return; } finally { Wal.signing = false; }
+          if ((Wal.addr || '').toLowerCase() !== who.toLowerCase()) { toast('The wallet changed while signing, so the pick was not saved'); renderRaid(); return; }
+          if (!pickOpen(date)) { toast('That day locked while signing'); renderRaid(); return; } }
+        raidSync(); raidInst(); const td = world.days[world.days.length - 1]; const dist = td && td.date === date && Number.isFinite(td.distMm) ? td.distMm : 0;
+        myPicks()[date] = { card: id, at: Math.round(srvNow()), dist, ...(signed ? { by: who, msg: signed.msg, sig: signed.sig } : {}) };
+        raidSave(); toast(`${c.name} picked for ${dateLabel(date)}` + (signed ? ', signed' : '')); renderRaid(); });
+      hand.appendChild(b); }
+  } else { $('handLock').textContent = ''; const p = document.createElement('p'); p.className = 'sub'; p.textContent = clk.length ? 'No hand open right now.' : 'Connecting to the wheel…'; hand.appendChild(p); }
+  // previous weeks
+  const hist = $('raidHist'); hist.innerHTML = '';
+  for (const w of world.weeks.slice(0, -1).reverse()) { let tot = 0, played = 0; const ok = w.known && w.days.every(known); if (ok) for (const d of w.days) { const sc = scoreDay(d); tot += sc.score; if (sc.cardId) played++; } const t = Math.round(w.hpMm * TARGET);
+    const li = document.createElement('li'); const a = document.createElement('span'); a.textContent = `Week ${w.w + 1} vs ${w.name}`; const b2 = document.createElement('span');
+    if (!ok) { b2.className = 'lost'; b2.textContent = 'reading…'; } else if (!played) { b2.className = 'lost'; b2.textContent = 'not played'; } else { b2.className = tot >= t ? 'won' : 'lost'; b2.textContent = `${fmtKm(tot, 0)} of ${fmtKm(t, 0)} · ${tot >= t ? 'victory' : 'escaped'} · ${played} card${played > 1 ? 's' : ''}`; }
+    li.append(a, b2); hist.appendChild(li); }
+  shareRows = { wk, rows, mine, target };
+  renderWallet(); renderStrikes();
+}
+let shareRows = null;
+async function shareRaid(){
+  if (!shareRows) return; const { wk, rows, mine, target } = shareRows;
+  const lines = [`Wheelbound Raid · Week ${wk.w + 1} vs ${wk.name}`];
+  for (const r of rows) { if (!r.sc) continue; const c = r.sc.cardId ? CARD[r.sc.cardId] : null;
+    lines.push(`${dateLabel(r.date)} ${c ? c.emoji : '▫️'} ${c ? (r.sc.pending ? '⏳' : '⭐'.repeat(r.sc.stars) || '·') : '·'} ${fmtKm(r.sc.score)}`); }
+  lines.push(`Raid: ${fmtKm(mine)} / ${fmtKm(target, 0)} ${mine >= target ? '✅' : '⚔️'}`);
+  if (Wal.addr) lines.push(`Player ${short(Wal.addr)} · picks signed by the wallet` + (Wal.squeeks > 0 ? ' · 🐹 Squeek holder on Sepolia' : ''));
+  if (location.protocol.startsWith('http')) lines.push(location.href.split('#')[0]);
+  const t = lines.join('\n');
+  try { await navigator.clipboard.writeText(t); toast('Raid result copied'); }
+  catch { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('Raid result copied'); } catch { toast('Copy blocked, text selected'); } setTimeout(() => ta.remove(), 4000); }
+}
+
+/* ---------- rendering ---------- */
+let toastT;
+function toast(m){ const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2400); }
+const painted = new Map();
+function render(){
+  try { renderNow(); } catch (e) { console.error('render', e); }
+}
+function renderNow(){
+  world = buildWorld();
+  const m = S.status?.measurement; const ov = document.body.classList.contains('overlay');
+  // chips
+  let feed = 'Connecting…', fd = '';
+  if (S.apiErr > 2 && Date.now() - S.statusAt > 30000) { feed = 'API unreachable, retrying'; fd = 'bad'; }
+  else if (m) { const age = (srvNow() - Date.parse(m.observedAt)) / 1000;
+    if (m.freshness === 'stale' || age > (num(m.staleAfterSeconds) || 120)) { feed = 'Wheel feed stale'; fd = 'warn'; }
+    else if (running() > 0) { feed = 'Squeektoshi is running'; fd = 'on'; } else { feed = 'Squeektoshi is resting'; fd = ''; } }
+  setText('feedTxt', feed); $('feedDot').className = 'dot ' + fd;
+  const readDays = world.days.filter(d => d.complete || d.settling || d.gap).length;
+  setText('histTxt', !world.complete && world.days.length ? `Reading the chain… ${readDays} of ${world.days.length} days` : S.settled ? 'Settled through round ' + S.settled : 'Reading the chain…');
+  $('histDot').className = 'dot ' + (!world.complete ? 'warn' : S.settled ? 'on' : '');
+  if (!world.days.length || !Number.isFinite(world.posMm)) return;
+  // hero + stats
+  const bNow = biomeAt(world, world.posMm); const next = world.landmarks.find(l => !l.passed); const passed = world.landmarks.filter(l => l.passed);
+  const today = world.days[world.days.length - 1];
+  setText('heroBiome', 'Day ' + world.days.length + ' · ' + bNow.name);
+  setText('heroWhere', passed.length ? 'Past ' + passed[passed.length - 1].name : 'At the trailhead');
+  setText('heroNext', next ? `${fmtKm(next.mm - world.posMm)} to ${next.name}` + (running() > 0 && num(m?.speedMmPerSecond) > 0 ? ` · about ${durTxt((next.mm - world.posMm) / num(m.speedMmPerSecond) / 60)} at this pace` : '') : ' ');
+  setText('stTotal', fmtKm(world.posMm)); setText('stToday', today.isToday && Number.isFinite(today.distMm) ? fmtKm(today.distMm) : '0.0 km');
+  setText('stLm', String(passed.length)); setText('stLmSub', next ? 'next: ' + next.name : 'one every 5 km');
+  const done = world.weeks.filter(w => w.done || w.defeatedAt); setText('stBoss', world.weeks.filter(w => w.defeatedAt).length + ' / ' + world.weeks.length);
+  // boss
+  const wk = world.weeks[world.weeks.length - 1];
+  if (wk && wk.known) { const left = Math.max(0, wk.hpMm - wk.dmgMm), pct = 100 * left / wk.hpMm;
+    setText('bossWeek', `Week ${wk.w + 1} · ${dateLabel(dateOfStart(wk.ws))} to ${dateLabel(dateOfStart(wk.we - DAY))}`);
+    setText('bossName', wk.name.replace(/^./, c => c.toUpperCase())); setText('bossEpi', wk.epithet);
+    $('hpFill').style.width = pct.toFixed(1) + '%'; $('hpBar').setAttribute('aria-valuenow', String(Math.round(pct)));
+    setText('hpLeft', wk.defeatedAt ? `Defeated at ${hhmm(wk.defeatedAt)} UTC on ${dateLabel(wk.defeatedDay.date)}` : `${fmtKm(left)} of ${fmtKm(wk.hpMm, 0)} left`);
+    const ms = wk.we - srvNow(); setText('hpTime', wk.defeatedAt ? 'victory' : ms > 0 ? `escapes in ${Math.floor(ms / DAY)}d ${Math.floor(ms % DAY / 3600000)}h` : 'escaped');
+    const logSig = world.weeks.map(w => w.w + ':' + w.known + ':' + !!w.defeatedAt + ':' + Math.round(w.dmgMm / 1e5)).join(',');
+    if ($('bossLog').dataset.sig !== logSig) { $('bossLog').dataset.sig = logSig; const log = $('bossLog'); log.innerHTML = '';
+      for (const w of world.weeks.slice(0, -1).reverse().slice(0, 8)) { const li = document.createElement('li'); const a = document.createElement('span'); a.textContent = `Week ${w.w + 1}: ${w.name}`; const b2 = document.createElement('span');
+        b2.className = w.defeatedAt ? 'won' : 'lost'; b2.textContent = !w.known ? 'reading…' : w.defeatedAt ? 'defeated ' + dateLabel(w.defeatedDay.date) : 'escaped (' + fmtKm(w.dmgMm, 0) + ' of ' + fmtKm(w.hpMm, 0) + ')'; li.append(a, b2); log.appendChild(li); } } }
+  if (!ov) { renderRaid(); renderTrail(next); renderChapters(); }
+  setText('foot2', `${fmtInt(S.rounds.size)} rounds read · ${world.days.length} chapters`);
+  if (isAddr(S.ids.core)) { const cl = $('coreLink'); if (cl.hidden) { cl.href = scan('address', S.ids.core); cl.textContent = 'SqueekCore on Sepolia ' + short(S.ids.core); cl.hidden = false; } }
+  renderOverlay(next, wk);
+}
+function setText(id, t){ const e = $(id); if (e && e.textContent !== t) e.textContent = t; }
+// The trail shows the stretch around Squeektoshi: the last landmarks passed and the next ones ahead.
+let trailScrolled = false;
+function renderTrail(next){
+  const tr = $('trail'); const lms = world.landmarks; const ni = next ? lms.indexOf(next) : lms.length;
+  const view = lms.slice(Math.max(0, ni - 8), ni + 6);
+  const sig = view.map(l => l.k + ':' + l.passed + ':' + (l.atMs || 0)).join(',') + '|' + (next ? Math.round((next.mm - world.posMm) / 1e5) : '');
+  if (tr.dataset.sig === sig) return; tr.dataset.sig = sig;
+  const keep = tr.scrollLeft; tr.innerHTML = ''; let lastBiome = -1;
+  for (const l of view) { const bz = biomeAt(world, l.mm - 1);
+    if (bz.index !== lastBiome) { lastBiome = bz.index; const e = document.createElement('div'); e.className = 'lm biome'; const k = document.createElement('span'); k.className = 'k'; k.textContent = 'from ' + fmtKm(bz.index * BIOME_MM, 0); const n = document.createElement('span'); n.className = 'n'; n.textContent = bz.name; e.append(k, n); tr.appendChild(e); }
+    const e = document.createElement('div'); e.className = 'lm' + (l.passed ? ' passed' : '') + (l === next ? ' next' : '');
+    const k = document.createElement('span'); k.className = 'k'; k.textContent = fmtKm(l.mm, 0); const n = document.createElement('span'); n.className = 'n'; n.textContent = l.name.replace(/^./, c => c.toUpperCase());
+    const dd = document.createElement('span'); dd.className = 'd'; dd.textContent = l.passed ? (l.day ? `reached ${dateLabel(l.day.date)}, ${hhmm(l.atMs)} UTC` : 'reached') : l === next ? fmtKm(l.mm - world.posMm) + ' to go' : 'ahead';
+    e.append(k, n, dd); tr.appendChild(e); }
+  if (!trailScrolled && next) { const el = tr.querySelector('.lm.next'); if (el) { tr.scrollLeft = Math.max(0, el.offsetLeft - tr.clientWidth / 2); trailScrolled = true; } } else tr.scrollLeft = keep;
+}
+// Chapters: the newest seven, more on request. A painting is redrawn only when its chapter changes.
+let chapterLimit = 7;
+function paintChapter(el){ const d = world.days.find(x => x.date === el.dataset.date); if (!d || el.dataset.painted === el.dataset.sig) return;
+  el.dataset.painted = el.dataset.sig; const cv = el.querySelector('canvas'); if (d.complete || d.isToday || ((d.settling || d.gap) && d.buckets.length)) paintDay(cv, world, d); else { const c = cv.getContext('2d'); if (c) { c.fillStyle = '#1b2537'; c.fillRect(0, 0, cv.width, cv.height); } } }
+function renderChapters(){
+  const box = $('chapters'); const all = world.days.slice().reverse(); const days = all.slice(0, chapterLimit);
+  if (box.querySelector('.loading')) box.innerHTML = '';
+  const want = new Set(days.map(d => d.date));
+  for (const el of [...box.querySelectorAll('.chapter')]) if (!want.has(el.dataset.date)) el.remove();
+  days.forEach((d, i) => {
+    const ready = d.complete || d.isToday;
+    const ch = ready ? chapterFor(world, d) : null;
+    const evN = S.meas.filter(e => e.at >= d.startMs && e.at < d.endMs).length;
+    const sig = [d.date, Math.round((d.distMm || 0) / 1000), d.work, d.rounds.length, evN, ch ? ch.lms.length : -1, ch ? ch.title : '', world.inst, d.isToday, ready, !!d.settling, !!d.gap, Math.round((d.endPos || 0) / 1e5)].join('|');
+    let el = box.querySelector(`.chapter[data-date="${d.date}"]`);
+    if (el && el.dataset.sig === sig) { if (box.children[i] !== el) box.insertBefore(el, box.children[i] || null); return; }
+    if (!el) { el = document.createElement('article'); el.dataset.date = d.date; el.className = 'chapter';
+      el.innerHTML = '<canvas width="1200" height="400" role="img"></canvas><div class="facts"><div><b data-f="km"></b><span>distance</span></div><div><b data-f="run"></b><span>on the wheel</span></div><div><b data-f="km2"></b><span>journey total</span></div></div><div class="text"><span class="eyebrow"></span><h3></h3><div class="paras"></div><div class="acts"><button class="btn" data-a="save" type="button">Save card</button><button class="btn" data-a="copy" type="button">Copy text</button></div></div>';
+      el.querySelector('[data-a="save"]').addEventListener('click', () => saveCard(el.dataset.date));
+      el.querySelector('[data-a="copy"]').addEventListener('click', () => copyText(el.dataset.date)); }
+    el.dataset.sig = sig; el.classList.toggle('today', !!d.isToday);
+    const bz = Number.isFinite(d.startPos) ? biomeAt(world, d.startPos).name : '';
+    el.querySelector('.eyebrow').textContent = `Chapter ${d.chapter} · ${dateLabel(d.date)}${d.isToday ? ' · being written' : ''}${bz ? ' · ' + bz : ''}`;
+    el.querySelector('h3').textContent = ch ? ch.title : d.settling ? 'Settling on chain…' : d.gap ? 'A Gap in the Record' : 'Still being read from the chain…';
+    const pb = el.querySelector('.paras'); pb.innerHTML = '';
+    for (const p of ch ? ch.paras : [d.settling ? 'The day is over, and its last rounds are still settling on chain. The chapter is written as soon as they land.' : d.gap ? `Some of this day's rounds never appeared in Squeekchain's settlement feed, so the chapter can't be told round by round.` + (Number.isFinite(d.distMm) ? ` The wheel's own stats count ${fmtKm(d.distMm)} for the day.` : '') : 'This chapter appears as soon as its settled rounds have been read.']) { const pe = document.createElement('p'); pe.textContent = p; pb.appendChild(pe); }
+    el.querySelector('.acts').hidden = !ch;
+    el.querySelector('[data-f="km"]').textContent = Number.isFinite(d.distMm) ? fmtKm(d.distMm) : '—';
+    el.querySelector('[data-f="run"]').textContent = ch && ch.f.minutes ? durTxt(ch.f.minutes).replace(' minutes', ' min').replace(' hours', ' h').replace(' hour', ' h') : ch ? (d.isToday ? 'not yet' : 'rest') : '—';
+    el.querySelector('[data-f="km2"]').textContent = Number.isFinite(d.endPos) ? fmtKm(d.endPos, 0) : '—';
+    el.querySelector('canvas').setAttribute('aria-label', `Painting of chapter ${d.chapter}` + (ch ? ': ' + ch.title : ''));
+    const more = box.querySelector('.more'); if (box.children[i] !== el) box.insertBefore(el, box.children[i] || more || null);
+    paintChapter(el);
+  });
+  let more = box.querySelector('.more');
+  if (all.length > chapterLimit) { if (!more) { more = document.createElement('button'); more.type = 'button'; more.className = 'btn more'; more.addEventListener('click', () => { chapterLimit += 7; render(); }); box.appendChild(more); }
+    more.textContent = `Show older chapters (${all.length - chapterLimit} more)`; box.appendChild(more); } else if (more) more.remove();
+}
+function chapterTextFor(date){ const d = world.days.find(x => x.date === date); if (!d) return null; const ch = chapterFor(world, d);
+  return { d, ch, text: `Wheelbound · Chapter ${d.chapter} (${dateLabel(d.date)}): ${ch.title}\n\n${ch.paras.join('\n\n')}\n\n${location.origin === 'null' ? '' : location.href.split('#')[0]}` }; }
+async function copyText(date){ const x = chapterTextFor(date); if (!x) return;
+  try { await navigator.clipboard.writeText(x.text); toast('Chapter copied'); }
+  catch { const ta = document.createElement('textarea'); ta.value = x.text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); toast('Chapter copied'); } catch { toast('Copy blocked, text selected'); } setTimeout(() => ta.remove(), 4000); } }
+function saveCard(date){ const x = chapterTextFor(date); if (!x) return;
+  const cv = document.createElement('canvas'); cv.width = 1200; cv.height = 630;
+  paintDay(cv, world, x.d, { card: true, eyebrow: `CHAPTER ${x.d.chapter} · ${dateLabel(x.d.date).toUpperCase()} · ${x.ch.bStart.name.toUpperCase()}`, title: x.ch.title, foot: `${fmtKm(x.d.distMm)} run · ${fmtKm(x.d.endPos, 0)} journey total` });
+  cv.toBlob(b => { if (!b) { toast('Could not make the card'); return; } const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `wheelbound-chapter-${x.d.chapter}.png`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); toast('Card saved'); }, 'image/png'); }
+function renderOverlay(next, wk){
+  const today = world.days[world.days.length - 1];
+  $('ovState').textContent = running() > 0 ? 'running' : 'resting';
+  $('ovWhere').textContent = biomeAt(world, world.posMm).name; $('ovToday').textContent = 'today ' + (today && today.isToday ? fmtKm(today.distMm) : '0.0 km');
+  if (next) { const prev = next.mm - LM_MM; $('ovLm').style.width = clamp(100 * (world.posMm - prev) / LM_MM, 0, 100).toFixed(1) + '%'; $('ovLmTxt').textContent = `${fmtKm(next.mm - world.posMm)} to ${next.name}`; }
+  if (wk) { const left = Math.max(0, wk.hpMm - wk.dmgMm); $('ovBoss').style.width = (100 * left / wk.hpMm).toFixed(1) + '%'; $('ovBossTxt').textContent = wk.defeatedAt ? `${wk.name} defeated` : `${wk.name}: ${fmtKm(left)} left`; }
+}
+
+/* ---------- boot and polling ---------- */
+function applyMode(){ const o = location.hash === '#overlay'; document.body.classList.toggle('overlay', o); document.documentElement.classList.toggle('overlay', o); }
+window.addEventListener('hashchange', applyMode); applyMode();
+const ovLink = () => location.href.split('#')[0] + '#overlay';
+$('ovUrl').textContent = ovLink();
+$('raidShare').addEventListener('click', shareRaid);
+$('ovCopy').addEventListener('click', async () => { const t = ovLink();
+  try { await navigator.clipboard.writeText(t); toast('Overlay link copied'); }
+  catch { const r = document.createRange(); r.selectNodeContents($('ovUrl')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); toast('Link selected, copy it with Ctrl+C'); } });
+async function safe(fn){ try { await fn(); S.apiErr = 0; return true; } catch (e) { S.apiErr++; return false; } }
+const busy = {};
+async function once(name, fn){ if (busy[name]) return false; busy[name] = true; try { return await safe(fn); } finally { busy[name] = false; } }
+async function afterInstChange(){ if (!S.instChanged) return; S.instChanged = false; await once('core', loadCore); await once('stats', loadStats); await once('meas', loadMeas); }
+function startTimers(){
+  setInterval(async () => { await once('status', loadStatus); await afterInstChange(); render(); verifyRecent().then(render); }, 10000);
+  setInterval(async () => { await once('hist', () => loadHistory(30, render)); await afterInstChange(); render(); }, 60000);
+  setInterval(async () => { await once('stats', loadStats); if (Wal.addr) loadHoldings(); render(); }, 5 * 60000);
+  setInterval(async () => { await once('meas', loadMeas); render(); }, 10 * 60000);
+  setInterval(async () => { if (!S.statsDays.length) await once('stats', loadStats); if (!Number.isFinite(S.g)) await once('core', loadCore); render(); }, 15000);
+}
+async function boot(){
+  startTimers();
+  requestAnimationFrame(drawScene);
+  render();
+  await Promise.all([once('core', loadCore), once('status', loadStatus), once('stats', loadStats), once('meas', loadMeas)]);
+  S.ready = true; render();
+  await once('hist', () => loadHistory(400, render));
+  render(); verifyRecent().then(render);
+}
+window.__wb = { Wal, verified, verifyRecent, myPicks, S, CARDS, CARD, handFor, dayParts, scoreDay, pickOpen, raid, get world(){ return world; }, buildWorld, chapterFor, dayFacts, timeAtPos, biomeAt, landmarkName, bossFor, hash, rng, applySettlement };
+boot();
+})();
+</script>
+</body>
+</html>
